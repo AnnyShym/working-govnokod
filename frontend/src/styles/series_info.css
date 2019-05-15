@@ -1,0 +1,59 @@
+.series-block {
+	width: 800px;
+}
+
+.all-series {
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+.all-series-container {
+	width: 950px;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.series-title {
+    font-size: 1.3rem;
+}
+
+.series-card-info {
+    margin-left: 120px;
+}
+
+.series-info {
+    margin-left: 225px;
+}
+
+.series-description {
+    margin: 0px;
+}
+
+.rating img {
+    width: 20px;
+}
+
+.rating li {
+    float: left;
+    list-style-type: none;
+    cursor: pointer;
+}
+
+.rating-span {
+    float: left;
+}
+
+.pagination {
+	cursor: pointer;
+	float: left;
+}
+
+.pagination:hover {
+	color: blue;
+}
+
+.pagination-left {
+	margin-left: 65px;
+}
+
+.pagination-right {
+	margin-left: 1290px;
+}

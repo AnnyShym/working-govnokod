@@ -1,0 +1,13 @@
+#logo {
+    margin-left: 10px;
+}
+
+#logo-img {
+	width: 30px;
+	margin-right: 10px;
+}
+
+#log-out {
+    margin-left: 1250px;
+    cursor: pointer;
+}
