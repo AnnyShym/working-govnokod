@@ -23,7 +23,7 @@ app.use(cookieParser());
 const PORT = 8080;
 
 // Some DB info
-const DB_NAME = 'series_db';
+const DB_NAME = 'episodia';
 // const TABLES = ['administrators', 'users', 'series', 'seasons', 'episodes', 'actors', 'actorsinseries', 'ratings'];
 const roles = {
     ADMIN: 'Administrator',
@@ -62,6 +62,7 @@ const CONNECTION_LOG = 'MySql database was connected.';
 // const CONNECTION_STR = 'mysql://root:root@192.168.99.100:3307/series_db?charset=utf8_general_ci&timezone=-0700';
 const db = mysql.createConnection({
     host: 'localhost',
+    port: 3308,
     user: 'root',
     password: '',
     database: DB_NAME
@@ -74,7 +75,7 @@ db.connect((err) => {
     console.log(CONNECTION_LOG);
 });
 
-// Creating the tables
+// // Creating the tables
 // const sqlFile = fs.readFileSync(DB_LOCATION).toString();
 // const arrSql = sqlFile.split('\r\n\r\n');
 // for (let i in arrSql) {
@@ -306,13 +307,13 @@ app.get('/tables', function(req, res) {
 });
 
 app.get('/series/:id/seasons', function(req, res) {
-    // const userCookieJwt = req.cookies.user_auth;
-    // jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
-    //     if (err) {
-    //         res.status(statusCodes.UNAUTHORIZED).json(
-    //             {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
-    //     }
-    //     else {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
             select('season_id, serial_number, title, premiere_date, description',
                 'seasons', `WHERE series_id = ${req.params.id}`,
                 'ORDER BY serial_number ASC',
@@ -324,18 +325,18 @@ app.get('/series/:id/seasons', function(req, res) {
                     res.status(statusCode).json({rows: rows});
                 }
             });
-        });
-//     });
-// });
+        }
+    });
+});
 
 app.get('/series/:id', function(req, res) {
-    // const userCookieJwt = req.cookies.user_auth;
-    // jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
-    //     if (err) {
-    //         res.status(statusCodes.UNAUTHORIZED).json(
-    //             {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
-    //     }
-    //     else {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
             selectRow('series', `series_id = ${req.params.id}`,
                 function (err, statusCode, msg, row) {
                 if (err) {
@@ -345,18 +346,18 @@ app.get('/series/:id', function(req, res) {
                     res.status(statusCode).json({row: row});
                 }
             });
-        });
-//     });
-// });
+        }
+    });
+});
 
 app.get('/season/:id/episodes', function(req, res) {
-    // const userCookieJwt = req.cookies.user_auth;
-    // jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
-    //     if (err) {
-    //         res.status(statusCodes.UNAUTHORIZED).json(
-    //             {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
-    //     }
-    //     else {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
             select('episode_id, serial_number, title, premiere_date, description',
                 'episodes', `WHERE season_id = ${req.params.id}`,
                 'ORDER BY serial_number ASC',
@@ -368,19 +369,18 @@ app.get('/season/:id/episodes', function(req, res) {
                     res.status(statusCode).json({rows: rows});
                 }
             });
-        });
-//     });
-// });
+        }
+    });
+});
 
 app.get('/series/:op/:prevind/:seriesPerPage', function(req, res) {
-    // const userCookieJwt = req.cookies.user_auth;
-    // console.log(userCookieJwt);
-    // jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
-    //     if (err) {
-    //         res.status(statusCodes.UNAUTHORIZED).json(
-    //             {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
-    //     }
-    //     else {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
             if (req.params.op === 'previous' || req.params.op === 'next') {
 
                 let where = `WHERE series_id > ${req.params.prevind}`;
@@ -389,7 +389,7 @@ app.get('/series/:op/:prevind/:seriesPerPage', function(req, res) {
                     where = `WHERE series_id <= ${req.params.prevind}`;
                     op = 'ASC';
                 }
-                
+
                 const orderBy = `ORDER BY series_id ${op} LIMIT 0, ${req.params.seriesPerPage}`;
                 select('series_id, title, country, original_language, premiere_date, description, rating', 'series',
                     where, orderBy, function (err, statusCode, msg, rows) {
@@ -399,22 +399,22 @@ app.get('/series/:op/:prevind/:seriesPerPage', function(req, res) {
                     else {
                         res.status(statusCode).json({rows: rows});
                     }
-                });   
+                });
 
             }
-        });
-//     });
-// });
+        }
+    });
+});
 
 app.get('/covers/small/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/${req.params.id}/${req.params.id}_small.jpg`, (err) => {
-        res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/no_image_small.png`);
+        res.sendFile(`${__dirname}/public/img/covers/no_image_small.png`);
     });
 });
 
 app.get('/covers/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/${req.params.id}/${req.params.id}.jpg`, (err) => {
-        res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/no_image.png`);
+        res.sendFile(`${__dirname}/public/img/covers/no_image.png`);
     });
 });
 
@@ -451,22 +451,28 @@ app.get('/videos/:id.mp4', function(req, res) {
         fs.createReadStream(path).pipe(res);
     }
 
-})
+});
+
+app.get('/subtitles/:id.vtt', function(req, res) {
+    res.status(statusCodes.OK).sendFile(`${__dirname}/public/subtitles/${req.params.id}.vtt`, (err) => {
+        res.status(statusCodes.OK);
+    });
+});
 
 io.on('connection', (socket) => {
 
     socket.on('save rating', (seriesId, ratingValue, token) => {
-        // jwt.verify(token, config.KEY, function(err, decoded) {
-        //     if (err) {
-        //         socket.emit('save rating', {statusCode: statusCodes.UNAUTHORIZED,
-        //             errors: [{ msg: UNAUTHORIZED_MSG }]});
-        //     }
-        //     else {
+        jwt.verify(token, config.KEY, function(err, decoded) {
+            if (err) {
+                socket.emit('save rating', {statusCode: statusCodes.UNAUTHORIZED,
+                    errors: [{ msg: UNAUTHORIZED_MSG }]});
+            }
+            else {
 
                 const newValues = `user_id = ${decoded.id}, series_id = ${
                     seriesId}, rating_value = ${ratingValue}`;
 
-                insertRow('ratings', newValues, function (err, statusCode,
+                insertRow('ratings_for_series', newValues, function (err, statusCode,
                     msg) {
                     if (err) {
                         socket.emit('save rating', {statusCode: statusCode,
@@ -481,25 +487,28 @@ io.on('connection', (socket) => {
                                 console.log(err);
                             }
                             else {
-                                socket.emit('get rating', {statusCode:
+                                io.sockets.emit('get rated value', {statusCode:
+                                    statusCodes.OK, row: [{rating_value: ratingValue}],
+                                    token: token, errors: []});
+                                io.sockets.emit('get rating', {statusCode:
                                     statusCodes.OK, row: row, errors: []});
                             }
                         });
                     }
                 });
 
-            });
-    //     });
-    // });
+            }
+        });
+    });
 
     socket.on('get rated value', (seriesId, token) => {
-        // jwt.verify(token, config.KEY, function(err, decoded) {
-        //     if (err) {
-        //         socket.emit('get rated value', {statusCode: statusCodes.UNAUTHORIZED,
-        //             row: [], errors: [{ msg: UNAUTHORIZED_MSG }]});
-        //     }
-        //     else {
-                select('rating_value', 'ratings', `WHERE user_id = ${decoded.id} AND series_id = ${seriesId}`, '',
+        jwt.verify(token, config.KEY, function(err, decoded) {
+            if (err) {
+                socket.emit('get rated value', {statusCode: statusCodes.UNAUTHORIZED,
+                    row: [], errors: [{ msg: UNAUTHORIZED_MSG }]});
+            }
+            else {
+                select('rating_value', 'ratings_for_series', `WHERE user_id = ${decoded.id} AND series_id = ${seriesId}`, '',
                     function (err, statusCode, msg, row) {
                     if (err) {
                         console.log(err);
@@ -509,12 +518,12 @@ io.on('connection', (socket) => {
                     }
                     else {
                         socket.emit('get rated value', {statusCode:
-                            statusCodes.OK, row: row, errors: []});
+                            statusCodes.OK, row: row, token: token, errors: []});
                     }
                 });
-            });
-    //     });
-    // });
+            }
+        });
+    });
 
     io.sockets.on('disconnect', () => {
         io.sockets.removeAllListners();

@@ -24,7 +24,7 @@ module.exports = {
             cookieName = 'admin_auth';
         }
 
-        let sql = `SELECT id, login, password FROM ${table} WHERE login = "${
+        let sql = `SELECT user_id, login, nickname, password FROM ${table} WHERE login = "${
             req.body.login}";`;
         main.db.query(sql, (err, result) => {
 
@@ -44,8 +44,9 @@ module.exports = {
             if (md5(req.body.password) === result[0].password) {
 
                 const token = main.jwt.sign({
-                    id: result[0].id,
+                    id: result[0].user_id,
                     login: result[0].login,
+                    nickname: result[0].nickname,
                     password: result[0].password,
                 }, config.KEY,
                     {expiresIn: config.TIME_JWT}

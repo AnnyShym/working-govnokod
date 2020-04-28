@@ -26,34 +26,3 @@
 .series-description {
     margin: 0px;
 }
-
-.rating img {
-    width: 20px;
-}
-
-.rating li {
-    float: left;
-    list-style-type: none;
-    cursor: pointer;
-}
-
-.rating-span {
-    float: left;
-}
-
-.pagination {
-	cursor: pointer;
-	float: left;
-}
-
-.pagination:hover {
-	color: blue;
-}
-
-.pagination-left {
-	margin-left: 65px;
-}
-
-.pagination-right {
-	margin-left: 1290px;
-}

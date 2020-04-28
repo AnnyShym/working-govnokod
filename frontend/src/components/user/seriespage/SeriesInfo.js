@@ -10,6 +10,7 @@ import addZeros from '../../../modules/add_zeros';
 
 import '../../../styles/series_info.css';
 import '../../../styles/cover.css';
+import '../../../styles/rating.css';
 
 const IMDB_LENGTH = 7;
 
@@ -23,7 +24,6 @@ class SeriesInfo extends Component {
             series: [],
             rating: [false, false, false, false, false],
             rated: false,
-            saved: false,
             allowed: true,
             errors: []
         };
@@ -82,20 +82,22 @@ class SeriesInfo extends Component {
         this.socket.on('get rated value', (res) => {
             if (res.statusCode === statusCodes.OK) {
                 if (res.row.length > 0) {
+                    if (res.token === token) {
 
-                    const ratingValue = res.row[0].rating_value;
-                    let newRating = this.state.rating;
-                    for (let i = 0; i <= ratingValue; i++) {
-                        newRating[i] = true;
+                        const ratingValue = res.row[0].rating_value;
+                        let newRating = this.state.rating;
+                        for (let i = 0; i <= ratingValue; i++) {
+                            newRating[i] = true;
+                        }
+
+                        this.setState({
+                            rating: newRating,
+                            rated: true,
+                            allowed: true,
+                            errors: []
+                        })
+
                     }
-
-                    this.setState({
-                        rating: newRating,
-                        rated: true,
-                        allowed: true,
-                        errors: []
-                    })
-
                 }
             }
             else {
@@ -171,35 +173,17 @@ class SeriesInfo extends Component {
             this.socket.emit('save rating', this.props.series_id, ratingValue,
                 token);
             this.socket.on('save rating', (res) => {
-                if (res.statusCode === statusCodes.CREATED) {
-
-                    let newRating = this.state.rating;
-                    for (let i = 0; i <= ratingValue; i++) {
-                        newRating[i] = true;
-                    }
-
-                    this.setState({
-                        rating: newRating,
-                        rated: true,
-                        allowed: true,
-                        saved: true,
-                        errors: []
-                    })
-
-                }
-                else {
+                if (res.statusCode !== statusCodes.CREATED) {
                     console.log(`${res.statusCode}: ${res.errors}`);
                     if (res.statusCode === statusCodes.UNAUTHORIZED) {
                         this.setState({
                             allowed: false,
-                            saved: false,
                             errors: res.errors
                         });
                     }
                     if (res.statusCode === statusCodes.INTERNAL_SERVER_ERROR ||
                         res.statusCode === statusCodes.BAD_REQUEST) {
                         this.setState({
-                            saved: false,
                             errors: res.errors
                         });
                     }

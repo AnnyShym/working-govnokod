@@ -1,0 +1,13 @@
+.rating img {
+    width: 20px;
+}
+
+.rating li {
+    float: left;
+    list-style-type: none;
+    cursor: pointer;
+}
+
+.rating span {
+    float: left;
+}

@@ -7,13 +7,15 @@ import '../../../styles/info.css';
 class Video extends Component {
     render() {
 
-        const address = `${serverAddress}videos/${this.props.episode_id}.mp4`;
+        const videoAddress = `${serverAddress}videos/${this.props.episode_id}.mp4`;
+        const subtitlesAddress = `${serverAddress}subtitles/${this.props.episode_id}.vtt`;
 
         return(
 
             <div className="video">
-                <video id="videoPlayer" width="500px" controls>
-                    <source src={ address } type="video/mp4" />
+                <video id="videoPlayer" width="500px" controls crossOrigin="anonymous">
+                    <source src={ videoAddress } type="video/mp4" />
+                    <track src={ subtitlesAddress } kind="subtitles" srcLang="en" label="English" default />
                 </video>
             </div>
 

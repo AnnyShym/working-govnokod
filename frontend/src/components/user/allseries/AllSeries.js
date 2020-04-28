@@ -9,6 +9,7 @@ import serverAddress from '../../../modules/server';
 import statusCodes from '../../../modules/status_codes';
 
 import '../../../styles/series_info.css';
+import '../../../styles/pagination.css';
 
 const SERIES_PER_PAGE = 5;
 
