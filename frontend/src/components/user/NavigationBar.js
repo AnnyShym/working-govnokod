@@ -13,11 +13,9 @@ class NavigationBar extends Component {
             loggedOut: false
         };
 
-        this.onClickLogOut = this.onClickLogOut.bind(this);
-
     }
 
-    onClickLogOut(e) {
+    onClickLogOut = (e) => {
         // document.cookie = 'user_auth=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         const cookies = document.cookie.split(";");
 
@@ -42,16 +40,16 @@ class NavigationBar extends Component {
 
         return(
 
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                <Link to={'/series'} className="navbar-brand" id="logo"><img src={ require('../../img/film.ico') } alt="logo" id="logo-img" />Episodia</Link>
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                      <div>
-                        <ul className="navbar-nav mr-auto">
-                            <li className="nav-item" id="log-out">
-                                <div onClick={ this.onClickLogOut } className="nav-link">Log Out</div>
-                            </li>
-                        </ul>
-                    </div>
+            <nav className="d-flex justify-content-between navbar navbar-expand-lg navbar-dark bg-dark nav-bar">
+                <div className="d-flex justify-content-start">
+                    <Link className="text-white m-0 p-0 text-decoration-none" to={'/series'}>
+                        <img src={ require('../../img/film.ico') } alt="logo" width="9%" className="mr-2" />
+                        Episodia
+                    </Link>
+                </div> 
+                <div className="d-flex">
+                    <Link to={'/play-ground'} className="nav-link btn btn-link text-secondary">PlayGround</Link>
+                    <Link onClick={ this.onClickLogOut } className="nav-link btn btn-link text-secondary nav-btn">Log Out</Link>
                 </div>
             </nav>
 

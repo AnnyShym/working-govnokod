@@ -1,29 +1,11 @@
-.auth-body {
-    padding-top: 191px;
-    padding-bottom: 191px;
-}
-
-.sign-body {
-    padding-top: 137px;
-    padding-bottom: 137px;
-}
-
 .auth-background {
-    background-image: url(../img/auth_bg.jpg);
+    background-image: url(../img/bg.jpg);
 	background-size: cover;
 	background-attachment: fixed;
+	height: 100vh;
 }
 
 .auth-container {
-    margin: 0px;
-    padding: 50px;
 	background-color: rgba(255, 255, 255, 0.9);
-	width: 400px;
-    border-radius: 20px;
-}
-
-.auth-prompt {
-    margin-top: 20px;
-    margin-bottom: 0px;
-    text-align: center;
+    border-radius: 2rem;
 }

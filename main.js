@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const http = require('http');
 const socketIO = require('socket.io');
+const say = require('say');
 
 const config = require('./modules/config');
 
@@ -120,7 +121,7 @@ function selectAllRows(table, orderBy, callback) {
 }
 
 function selectAllForIntermediateTable(table, table1ForJoin, table2ForJoin,
-    what, tableColumn1, tableColumn2, table1Column, table2Column, orderBy,
+    what, tableColumn1, tableColumn2, table1Column, table2Column, condition, orderBy,
     callback) {
 
     const sql = `SELECT ${what} FROM ${table
@@ -128,7 +129,7 @@ function selectAllForIntermediateTable(table, table1ForJoin, table2ForJoin,
     } = ${table1ForJoin}.${table1Column
     } INNER JOIN ${table2ForJoin} ON ${table}.${tableColumn2
     } = ${table2ForJoin}.${table2Column
-    } ${orderBy};`;
+    } ${condition} ${orderBy};`;
 
     const query = db.query(sql, (err, rows) => {
         if (err) {
@@ -406,15 +407,123 @@ app.get('/series/:op/:prevind/:seriesPerPage', function(req, res) {
     });
 });
 
+app.post('/key-words/add', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            let newValues = `word = '${req.body.word
+                }', translation = '${req.body.translation}'`;
+
+            insertRow('key_words', newValues, function (err, statusCode,
+                msg) {
+                if (err && err.code !== 'ER_DUP_ENTRY') {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    select('key_word_id', 'key_words', `WHERE word = '${req.body.word}'`,
+                        '', function (err, statusCode, msg, rows) {
+                        if (err) {
+                            res.status(statusCode).json({errors: [{msg: msg}]});
+                        }
+                        else {
+                            const newValues = `key_word_id = ${rows[0].key_word_id
+                                }, user_id = ${decoded.id}, progress = 'ON_STUDY'`;
+
+                            insertRow('key_words_for_users', newValues, function (err, statusCode,
+                                msg) {
+                                if (err) {
+                                    res.status(statusCode).json({errors: [{msg: msg}]});
+                                }
+                                else {
+                                    res.sendStatus(statusCode);
+                                }
+                            });
+
+                        }
+                    });
+                }
+            });
+
+        }
+    });
+});
+
+app.post('/key-words/progress', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (!err) {
+            updateRow('key_words_for_users', 'progress = "LEARNED"', 
+                `key_word_id = ${req.body.key_word_id} AND user_id = ${decoded.id}`, function (err, statusCode,
+                msg) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.sendStatus(statusCode);
+                }
+            });
+        }
+    });
+});
+
+app.get('/vocabulary', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            selectAllForIntermediateTable('key_words_for_users', 'users', 'key_words',
+                'key_words.key_word_id, word, translation', 'user_id', 'key_word_id', 'user_id', 'key_word_id', 
+                `WHERE users.user_id = ${decoded.id} AND progress = "ON_STUDY"`, '',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.post('/save-progress', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        updateRow('users',`learned_count = ${req.body.learnedCount
+            }, trained_count = ${req.body.totalCount}, correct_count = ${req.body.correctCount}`, 
+            `user_id = ${decoded.id}`,
+            function (err, statusCode, msg) {
+            if (err) {
+                res.status(statusCode).json({errors: [{msg: msg}]});
+            }
+            else {
+                res.sendStatus(statusCode);
+            }
+        });
+    });
+});
+
 app.get('/covers/small/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/${req.params.id}/${req.params.id}_small.jpg`, (err) => {
-        res.sendFile(`${__dirname}/public/img/covers/no_image_small.png`);
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/no_image_small.png`);
+        }
     });
 });
 
 app.get('/covers/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/${req.params.id}/${req.params.id}.jpg`, (err) => {
-        res.sendFile(`${__dirname}/public/img/covers/no_image.png`);
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/no_image.png`);
+        }        
     });
 });
 
@@ -455,8 +564,28 @@ app.get('/videos/:id.mp4', function(req, res) {
 
 app.get('/subtitles/:id.vtt', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/subtitles/${req.params.id}.vtt`, (err) => {
-        res.status(statusCodes.OK);
+        if (err) {
+            console.log(err);
+            res.sendStatus(err.statusCode);
+        }
     });
+});
+
+app.get('/audio/:word.mp3', function(req, res) {
+    say.export(req.params.word, 'Microsoft Zira Desktop', 1, `./public/audio/${req.params.word}.mp3`, (err) => {
+        if (err) {
+            console.log(err);
+            res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+        }
+        else {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/audio/${req.params.word}.mp3`, (err) => {
+                if (err) {
+                    console.log(err);
+                    res.sendStatus(err.statusCode);
+                }
+            });
+        }
+    })
 });
 
 io.on('connection', (socket) => {

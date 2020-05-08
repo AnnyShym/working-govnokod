@@ -8,8 +8,6 @@ import EmptyCard from './EmptyCard';
 import serverAddress from '../../modules/server';
 import statusCodes from '../../modules/status_codes';
 
-import '../../styles/cards.css';
-
 class AllTables extends Component {
 
     constructor(props) {
@@ -60,17 +58,17 @@ class AllTables extends Component {
         return(
 
             <div>
-                <div className="row cards-row" >
+                <div className="row mb-3" >
                     <Card table={ this.state.tables[i] } tableAlt={ this.state.tablesAlt[i++] } />
                     <Card table={ this.state.tables[i] } tableAlt={ this.state.tablesAlt[i++] } />
                     <Card table={ this.state.tables[i] } tableAlt={ this.state.tablesAlt[i++] } />
                 </div>
-                <div className="row cards-row">
+                <div className="row mb-3">
                     <Card table={ this.state.tables[i] } tableAlt={ this.state.tablesAlt[i++] } />
                     <Card table={ this.state.tables[i] } tableAlt={ this.state.tablesAlt[i++] } />
                     <Card table={ this.state.tables[i] } tableAlt={ this.state.tablesAlt[i++] } />
                 </div>
-                <div className="row cards-row">
+                <div className="row mb-3">
                     <Card table={ this.state.tables[i] } tableAlt={ this.state.tablesAlt[i++] } />
                     <Card table={ this.state.tables[i] } tableAlt={ this.state.tablesAlt[i++] } />
                     <EmptyCard />

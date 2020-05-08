@@ -46,7 +46,7 @@ class SeriesInfo extends Component {
 
     getSeries() {
         axios.get(`${serverAddress}series/${this.props.series_id}`,
-            {withCredentials: true})
+            {withCredentials: true})    
         .then(response => {
             this.setState({
                 series: response.data.row,
@@ -233,7 +233,7 @@ class SeriesInfo extends Component {
                                 <div className="series-info">
                                     <Link to={ `/series/${this.state.series[0].series_id}` } className="series-title">{ this.state.series[0].title }</Link>
                                     <hr />
-                                    <span>Rating: { this.state.series[0].rating }</span>
+                                    <span>Rating: { this.state.series[0].rating.toFixed(1) }</span>
                                     <br />
                                     <span>Country: { this.state.series[0].country }</span>
                                     <br />
@@ -249,44 +249,46 @@ class SeriesInfo extends Component {
                                     <hr />
                                     <p className="series-description">Description: { this.state.series[0].description }</p>
                                     <hr />
-                                    <span className="rating-span">Rate:</span>
-                                    <ul className="rating">
-                                        <li onClick={ this.onClickRating1 }>
-                                            { this.state.rating[1] ?
-                                                <img src={ require('../../../img/star.png') } alt="1 Star" />
+                                    <div className="d-flex">
+                                        <span className="rating-span">Rate:</span>
+                                        <ul className="rating pl-2">
+                                            <li onClick={ this.onClickRating1 }>
+                                                { this.state.rating[1] ?
+                                                    <img src={ require('../../../img/star.png') } alt="1 Star" />
+                                                :
+                                                    <img src={ require('../../../img/empty_star.png') } alt="1 Star" />
+                                                }
+                                            </li>
+                                            <li onClick={ this.onClickRating2 }>
+                                            { this.state.rating[2] ?
+                                                <img src={ require('../../../img/star.png') } alt="2 Stars" />
                                             :
-                                                <img src={ require('../../../img/empty_star.png') } alt="1 Star" />
+                                                <img src={ require('../../../img/empty_star.png') } alt="2 Stars" />
                                             }
-                                        </li>
-                                        <li onClick={ this.onClickRating2 }>
-                                        { this.state.rating[2] ?
-                                            <img src={ require('../../../img/star.png') } alt="2 Stars" />
-                                        :
-                                            <img src={ require('../../../img/empty_star.png') } alt="2 Stars" />
-                                        }
-                                        </li>
-                                        <li onClick={ this.onClickRating3 }>
-                                        { this.state.rating[3] ?
-                                            <img src={ require('../../../img/star.png') } alt="3 Stars" />
-                                        :
-                                            <img src={ require('../../../img/empty_star.png') } alt="3 Stars" />
-                                        }
-                                        </li>
-                                        <li onClick={ this.onClickRating4 }>
-                                        { this.state.rating[4] ?
-                                            <img src={ require('../../../img/star.png') } alt="4 Stars" />
-                                        :
-                                            <img src={ require('../../../img/empty_star.png') } alt="4 Stars" />
-                                        }
-                                        </li>
-                                        <li onClick={ this.onClickRating5 }>
-                                        { this.state.rating[5] ?
-                                            <img src={ require('../../../img/star.png') } alt="5 Stars" />
-                                        :
-                                            <img src={ require('../../../img/empty_star.png') } alt="5 Stars" />
-                                        }
-                                        </li>
-                                    </ul>
+                                            </li>
+                                            <li onClick={ this.onClickRating3 }>
+                                            { this.state.rating[3] ?
+                                                <img src={ require('../../../img/star.png') } alt="3 Stars" />
+                                            :
+                                                <img src={ require('../../../img/empty_star.png') } alt="3 Stars" />
+                                            }
+                                            </li>
+                                            <li onClick={ this.onClickRating4 }>
+                                            { this.state.rating[4] ?
+                                                <img src={ require('../../../img/star.png') } alt="4 Stars" />
+                                            :
+                                                <img src={ require('../../../img/empty_star.png') } alt="4 Stars" />
+                                            }
+                                            </li>
+                                            <li onClick={ this.onClickRating5 }>
+                                            { this.state.rating[5] ?
+                                                <img src={ require('../../../img/star.png') } alt="5 Stars" />
+                                            :
+                                                <img src={ require('../../../img/empty_star.png') } alt="5 Stars" />
+                                            }
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

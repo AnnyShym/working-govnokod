@@ -7,6 +7,7 @@ import roles from '../../modules/roles';
 import statusCodes from '../../modules/status_codes';
 
 import '../../styles/auth.css';
+import '../../styles/link.css';
 
 class SignIn extends Component {
 
@@ -111,28 +112,30 @@ class SignIn extends Component {
 
         return(
 
-            <div className="auth-body auth-background" align="center">
-                <div className="container auth-container">
-                    <div>
-                        { errorBlocks }
-                    </div>
-                    <form method="post" onSubmit={ this.onSubmit }>
-                        <div className="form-group">
-                            <input type="email" name={ this.state.columns[1] } placeholder={ this.state.columnsAlt[1] } value={ this.state.authInfo.login } onChange= { this.onChangeLogin } className="form-control" id="exampleFormControlInput1" required />
+            <div className="auth-background w-100 d-flex justify-content-center">
+                <div className="h-100 d-flex flex-column justify-content-center">
+                    <div className="auth-container m-0 p-5">
+                        <div>
+                            { errorBlocks }
                         </div>
-                        <div className="form-group">
-                            <input type="password" name={ this.state.columns[2] } placeholder={ this.state.columnsAlt[2] } value={ this.state.authInfo.password } onChange= { this.onChangePassword } className="form-control" id="exampleFormControlInput2" required />
+                        <form className="d-flex flex-column" method="post" onSubmit={ this.onSubmit }>
+                            <div className="form-group">
+                                <input type="email" name={ this.state.columns[1] } placeholder={ this.state.columnsAlt[1] } value={ this.state.authInfo.login } onChange= { this.onChangeLogin } className="form-control" id="exampleFormControlInput1" required />
+                            </div>
+                            <div className="form-group">
+                                <input type="password" name={ this.state.columns[2] } placeholder={ this.state.columnsAlt[2] } value={ this.state.authInfo.password } onChange= { this.onChangePassword } className="form-control" id="exampleFormControlInput2" required />
+                            </div>
+                            <div className="form-group">
+                                <select name="role" value={ this.state.role } onChange= { this.onChangeRole } className="form-control" id="exampleFormControlSelect1">
+                                    <option value={ roles.USER }>{ roles.USER }</option>
+                                    <option value={ roles.ADMIN }>{ roles.ADMIN }</option>
+                                </select>
+                            </div>
+                            <button type="submit" name="Sign In" className="btn btn-dark align-self-center">Sign In</button>
+                        </form>
+                        <div>
+                            <p>You don't have an account? <Link to="/signup" rel="noopener" className="link">Sign Up</Link></p>
                         </div>
-                        <div className="form-group">
-                            <select name="role" value={ this.state.role } onChange= { this.onChangeRole } className="form-control" id="exampleFormControlSelect1">
-                                <option value={ roles.USER }>{ roles.USER }</option>
-                                <option value={ roles.ADMIN }>{ roles.ADMIN }</option>
-                            </select>
-                        </div>
-                        <button type="submit" name="Sign In" className="btn btn-dark">Sign In</button>
-                    </form>
-                    <div>
-                        <p className="auth-prompt">You don't have an account? <Link to="/signup" rel="noopener">Sign Up</Link></p>
                     </div>
                 </div>
             </div>

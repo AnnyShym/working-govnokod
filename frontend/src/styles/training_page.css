@@ -1,0 +1,53 @@
+.training-page {
+	background-image: url(../img/training_bg.jpg);
+	background-size: cover;
+	background-color: rgba(0, 0, 0, 0.7);
+	background-position: center;
+	min-height: 100%;
+}
+
+.training-btn {
+	background: linear-gradient(135deg, rgba(255, 209, 1, 1) 0%, rgba(133, 8, 174, 1) 100%);
+}
+
+.training-btn:hover {
+	-webkit-transform: rotateZ(10deg);
+	-ms-transform: rotateZ(10deg);
+	transform: rotateZ(10deg);
+}
+
+.translation {
+	font-size: 2rem;
+}
+
+.block-tab {
+	margin-right: -2rem;
+}
+
+.training-card {
+	height: 30%;
+}
+
+.card-shadow {
+	box-shadow: 0.5rem 0.5rem 1rem rgba(255, 255, 255, 0.5);
+}
+
+.result-font {
+	font-size: 1.5rem;
+}
+
+.training-err {
+	color: #9b1121;
+}
+
+.total-count {
+	color: #8508ae;
+}
+
+.correct-count {
+	color: #ff8500;
+}
+
+.learned-count {
+	color: #ffd101;
+}

@@ -17,6 +17,10 @@ class SeriesBlock extends Component {
                 <div className="container series-block">
                     { seriesBlocks}
                 </div>
+                <div className="d-flex p-3">
+                    <button onClick={ this.props.onClickPrevious } className="btn btn-dark">Previous</button>
+                    <button onClick={ this.props.onClickNext } className="ml-auto btn btn-dark">Next</button>
+                </div>
             </div>
 
         );

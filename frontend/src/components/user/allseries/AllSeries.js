@@ -9,7 +9,6 @@ import serverAddress from '../../../modules/server';
 import statusCodes from '../../../modules/status_codes';
 
 import '../../../styles/series_info.css';
-import '../../../styles/pagination.css';
 
 const SERIES_PER_PAGE = 5;
 
@@ -24,9 +23,6 @@ class AllSeries extends Component {
             allowed: true,
             errors: []
         };
-
-        this.LoadPrevious = this.LoadPrevious.bind(this);
-        this.LoadNext = this.LoadNext.bind(this);
 
     }
 
@@ -66,11 +62,11 @@ class AllSeries extends Component {
         })
     }
 
-    LoadPrevious(e) {
+    LoadPrevious = (e) => {
         this.loadSeries('previous');
     }
 
-    LoadNext(e) {
+    LoadNext = (e) => {
         this.loadSeries('next');
     }
 
@@ -90,23 +86,18 @@ class AllSeries extends Component {
 
         return(
 
-            <div className="all-series">
-                <div>
-                    <NavigationBar />
-                    { errorBlocks }
-                    { (this.state.errors.length > 0) ?
-                        <div></div>
-                    :
+            <div className="h-100">
+                <NavigationBar />
+                { errorBlocks }
+                { (this.state.errors.length > 0) ?
+                    <div className="all-series"></div>
+                :
+                    <div className="all-series">
                         <div>
-                            <div>
-                                <SeriesBlock series={ this.state.series }/>
-                            </div>
-                            
+                            <SeriesBlock series={ this.state.series } onClickPrevious={ this.LoadPrevious } onClickNext={ this.LoadNext } />
                         </div>
-                    }
-                    <div onClick={ this.LoadPrevious } className="pagination pagination-left">Previous</div>
-                    <div onClick={ this.LoadNext } className="pagination pagination-right">Next</div>
-                </div>
+                    </div>
+                }
             </div>
 
         );

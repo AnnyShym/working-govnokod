@@ -6,6 +6,7 @@ import getDate from '../../../modules/get_date';
 
 import '../../../styles/series_info.css';
 import '../../../styles/cover.css';
+import '../../../styles/link.css';
 
 class SeriesCard extends Component {
     render() {
@@ -21,9 +22,9 @@ class SeriesCard extends Component {
                         <img src={ address} alt={ this.props.series.title } className="cover" />
                     </Link>
                     <div className="series-card-info">
-                        <Link to={ `/series/${this.props.series.series_id}` } className="series-title">{ this.props.series.title }</Link>
+                        <Link to={ `/series/${this.props.series.series_id}` } className="series-title link">{ this.props.series.title }</Link>
                         <hr />
-                        <span>Rating: { this.props.series.rating }</span>
+                        <span>Rating: { this.props.series.rating.toFixed(1) }</span>
                         <br />
                         <span>Country: { this.props.series.country }</span>
                         <br />

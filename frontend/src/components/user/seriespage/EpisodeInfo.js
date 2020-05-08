@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Video from './Video';
+import VideoWithKeyWords from './VideoWithKeyWords';
 
 import getDate from '../../../modules/get_date';
 
@@ -64,7 +64,7 @@ class EpisodeInfo extends Component {
                 { this.state.expanded ?
                     <div>
                         { description }
-                        <Video episode_id={ this.props.episode.episode_id } />
+                        <VideoWithKeyWords episode_id={ this.props.episode.episode_id } />
                     </div>
                 :
                     <div></div>
