@@ -1,5 +1,9 @@
 const getDate = (isoDate) => {
 
+    if (isoDate === "") {
+        return isoDate;
+    }
+
     const fullDate = new Date(isoDate);
 
     const year = fullDate.getFullYear();

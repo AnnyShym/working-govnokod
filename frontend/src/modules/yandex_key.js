@@ -1,0 +1,3 @@
+const YANDEX_KEY = "trnsl.1.1.20200505T161954Z.a1a1366e47552125.c3b8fb4f9cb74794c8f03fe36728abef671ec1ed";
+
+export default YANDEX_KEY;

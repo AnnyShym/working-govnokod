@@ -49,7 +49,8 @@ class NavigationBar extends Component {
                 </div> 
                 <div className="d-flex">
                     <Link to={'/play-ground'} className="nav-link btn btn-link text-secondary">PlayGround</Link>
-                    <Link onClick={ this.onClickLogOut } className="nav-link btn btn-link text-secondary nav-btn">Log Out</Link>
+                    <Link to={'/account'} className="nav-link btn btn-link text-secondary">Account</Link>
+                    <Link to="" onClick={ this.onClickLogOut } className="nav-link btn btn-link text-secondary">Log Out</Link>
                 </div>
             </nav>
 

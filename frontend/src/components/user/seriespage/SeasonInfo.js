@@ -17,38 +17,15 @@ class SeasonInfo extends Component {
         super(props);
 
         this.state = {
-            title: '',
-            premiereDate: '',
             episodes: [],
             expanded: false,
             allowed: true,
             errors: []
         };
 
-        this.onExpand = this.onExpand.bind(this);
-
     }
 
-    componentWillMount() {
-
-        let title = '';
-        if (this.props.season.title !== null && this.props.season.title !== '') {
-            title = ` "${ this.props.season.title }"`;
-        }
-
-        let premiereDate = '';
-        if (this.props.season.premiere_date !== null) {
-            premiereDate = ` (${ getDate(this.props.season.premiere_date) })`;
-        }
-
-        this.setState({
-            title: title,
-            premiereDate: premiereDate
-        });
-
-    }
-
-    onExpand() {
+    onExpand = () => {
 
         if (!this.state.expanded && this.state.episodes.length === 0) {
             this.getEpisodes();
@@ -100,22 +77,31 @@ class SeasonInfo extends Component {
             return <Redirect to="/signin" />
         }
 
+        let title = '';
+        if (this.props.season.title !== null && this.props.season.title !== '') {
+            title = ` "${ this.props.season.title }"`;
+        }
+
+        let premiereDate = '';
+        if (this.props.season.premiere_date !== null) {
+            premiereDate = ` (${ getDate(this.props.season.premiere_date) })`;
+        }
+
         let description = null;
-        let episodeBlocks = <div></div>;
+        let episodeBlocks = null;
         let errorBlocks = <div></div>;
         if (this.state.expanded) {
 
             if (this.props.season.description !== null &&
                 this.props.season.description !== '') {
-                description = <p>Description: { this.props.season.description }</p>
+                description = <p className="w-75 mb-0">
+                    Description:
+                    <br />
+                    { this.props.season.description }
+                    </p>
             }
 
-            if (this.state.errors.length === 0) {
-                episodeBlocks = this.state.episodes.map((episode) =>
-                    <EpisodeInfo key={ episode.serial_number } episode={ episode } />
-                );
-            }
-            else {
+            if (this.state.errors.length > 0) {
                 errorBlocks = this.state.errors.map((error) =>
                     <div key={ error.msg } className="container">
                         <div className="alert alert-danger">{ error.msg }</div>
@@ -123,29 +109,41 @@ class SeasonInfo extends Component {
                 );
             }
 
+            if (this.state.episodes.length > 0) {
+                episodeBlocks = this.state.episodes.map((episode) =>
+                    <EpisodeInfo key={ episode.episode_id } episode={ episode } />
+                );
+            }
+
         }
 
         return(
 
-            <div className="card">
+            <div className="card border-btm">
                 <div className="card-body">
-                    <div onClick={ this.onExpand } className="title">Season { this.props.season.serial_number }{ this.state.title }{ this.state.premiereDate }</div>
+                    <div onClick={ this.onExpand } className="title">Season { this.props.season.serial_number }{ title }{ premiereDate }</div>
                     { this.state.expanded ?
                         this.state.errors.length === 0 ?
-                            <div>
-                                { description }
-                                <div className="card info-card">
-                                    <div className="card-body info-card-body">
+                            <div className="d-flex flex-column justify-content-between">
+                                <div className="mt-5 mb-4 d-flex justify-content-center">
+                                    { description }
+                                </div>
+                                <div className="mb-5 mt-4 card info-card">
+                                    <div className="d-flex flex-column ml-5">
                                         { episodeBlocks }
                                     </div>
                                 </div>
                             </div>
                         :
                         <div>
-                            { description }
-                            <div className="card info-card">
-                                <div className="card-body info-card-body">
-                                    { errorBlocks }
+                            <div className="d-flex flex-column justify-content-between">
+                                <div className="mt-4 mb-2 d-flex justify-content-center">
+                                    { description }
+                                </div>
+                                <div className="mt-2 mb-4 d-flex justify-content-center card info-card">
+                                    <div className="card-body">
+                                        { errorBlocks }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -158,6 +156,7 @@ class SeasonInfo extends Component {
         )
 
     }
+    
 }
 
 export default SeasonInfo;

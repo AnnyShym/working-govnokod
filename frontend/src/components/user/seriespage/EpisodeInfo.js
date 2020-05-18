@@ -1,28 +1,12 @@
 import React, { Component } from 'react';
-
-import VideoWithKeyWords from './VideoWithKeyWords';
+import { Link } from 'react-router-dom';
 
 import getDate from '../../../modules/get_date';
 
 import '../../../styles/info.css';
 
 class EpisodeInfo extends Component {
-
-    constructor(props) {
-
-        super(props);
-
-        this.state = {
-            title: '',
-            premiereDate: '',
-            expanded: false,
-        };
-
-        this.onExpand = this.onExpand.bind(this);
-
-    }
-
-    componentWillMount() {
+    render() {
 
         let title = '';
         if (this.props.episode.title !== null && this.props.episode.title !== '') {
@@ -34,46 +18,15 @@ class EpisodeInfo extends Component {
             premiereDate = ` (${ getDate(this.props.episode.premiere_date) })`;
         }
 
-        this.setState({
-            title: title,
-            premiereDate: premiereDate
-        });
-
-    }
-
-    onExpand() {
-        this.setState({
-            expanded: !this.state.expanded
-        });
-    }
-
-    render() {
-
-        let description = null;
-        if (this.state.expanded) {
-            if (this.props.episode.description !== null &&
-                this.props.episode.description !== '') {
-                description = <p>Description: { this.props.episode.description }</p>
-            }
-        }
-
         return(
 
-            <div>
-                <div onClick={ this.onExpand } className="title">Episode { this.props.episode.serial_number }{ this.state.title }{ this.state.premiereDate }</div>
-                { this.state.expanded ?
-                    <div>
-                        { description }
-                        <VideoWithKeyWords episode_id={ this.props.episode.episode_id } />
-                    </div>
-                :
-                    <div></div>
-                }
-            </div>
+            <Link to={ `/episodes/${this.props.episode.episode_id}` } className="title">
+                Episode { this.props.episode.serial_number }{ title }{ premiereDate }
+            </Link>
 
         )
 
-    }
+    }    
 }
 
 export default EpisodeInfo;

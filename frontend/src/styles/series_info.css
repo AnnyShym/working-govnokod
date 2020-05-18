@@ -1,17 +1,18 @@
 .series-block {
-	width: 800px;
+	width: 87%;
 }
 
 .all-series {
-	background-image: url(../img/bg.jpg);
+	background: url(../img/bg.jpg) top center;
 	background-size: cover;
 	background-color: rgba(0, 0, 0, 0.7);
-	background-position: center;
+	background-attachment: fixed;
+	background-position-y: 0;
 	min-height: 100%;
 }
 
 .all-series-container {
-	width: 950px;
+	width: 63%;
 	background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -19,14 +20,19 @@
     font-size: 1.3rem;
 }
 
-.series-card-info {
-    margin-left: 120px;
+.pointer {
+	cursor: pointer;
 }
 
-.series-info {
-    margin-left: 225px;
+a {
+	color: #48cfad;
 }
 
-.series-description {
-    margin: 0px;
+a:hover {
+	color: #48cfad;
+}
+
+.border-btm {
+	border: 0;
+	border-bottom: 0.08rem solid lightgrey;
 }

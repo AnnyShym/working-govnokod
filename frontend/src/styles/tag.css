@@ -1,0 +1,19 @@
+.tag {
+	border-radius: 1em 5px 5px 1em;
+	box-shadow: 0 0 3px #5E676E;
+	background-color: #5E676E;
+	cursor: pointer;
+}
+
+.lowercase {
+	text-transform: lowercase;
+}
+
+.tag-text {
+	color: #E7E7E7;
+}
+
+.tag-text:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}

@@ -1,23 +1,14 @@
 .title {
     font-size: 1.1rem;
-    color: blue;
+    color: #48cfad;
     cursor: pointer;
-}
-
-p {
-    margin: 20px;
-    margin-bottom: 0px;
-}
-
-.video {
-    margin: 40px;
-    text-align: center;
 }
 
 .info-card {
     border-color: white;
 }
 
-.info-card-body {
-    padding-bottom: 0px;
+.border-btm {
+	border: 0;
+	border-bottom: 0.08rem solid lightgrey;
 }

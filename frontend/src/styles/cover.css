@@ -1,5 +1,4 @@
 .cover {
-    float: left;
-    border-radius: 5px;
+    border-radius: 3px;
     box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.3);
 }

@@ -134,7 +134,7 @@ class SignUp extends Component {
                         <div>
                             { errorBlocks }
                         </div>
-                        <form method="post" className="d-flex flex-column" onSubmit={ this.onSubmit }>
+                        <form method="post" className="d-flex flex-column mb-3" onSubmit={ this.onSubmit }>
                             <div className="form-group">
                                 <input type="email" name={ this.state.columns[1] } placeholder={ this.state.columnsAlt[1] } value={ this.state.newInfo.login } onChange= { this.onChangeLogin } className="form-control" id="exampleFormControlInput1" required />
                             </div>
@@ -150,7 +150,7 @@ class SignUp extends Component {
                             <button type="submit" name="Sign Up" className="btn btn-dark align-self-center">Sign Up</button>
                         </form>
                         <div>
-                            <p>Already have an account? <Link to="/signin" rel="noopener" className="link">Sign In</Link></p>
+                            <p className="m-0">Already have an account? <Link to="/signin" rel="noopener" className="link">Sign In</Link></p>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,45 @@
+.expanded {
+	position: absolute;
+	left: 24.43%;
+	width: 51.15%;
+	z-index: 1;
+	background: rgba(238, 228, 233, 0.6);
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.search {
+	width: 80%;
+}
+
+input {
+  background: rgba(238, 228, 233, 0.6);
+  line-height: 5.5vh;
+  border-radius: 20px;
+}
+
+.width-32 {
+	width: 32.5%;
+}
+
+.width-49 {
+	width: 49.4%;
+}
+
+.width-24 {
+	width: 24.2%;
+}
+
+.width-74 {
+	width: 74.3%;
+}
+
+.width-24 {
+	width: 24.2%;
+}
+
+.width-66 {
+	width: 66%;
+}

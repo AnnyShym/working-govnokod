@@ -10,8 +10,8 @@ class SeriesPage extends Component {
 
             <div>
                 <NavigationBar />
-                <SeriesInfo series_id={ this.props.match.params.id } />
-                <AllSeasons series_id={ this.props.match.params.id } />
+                <SeriesInfo seriesId={ this.props.match.params.id } />
+                <AllSeasons seriesId={ this.props.match.params.id } />
             </div>
 
         );

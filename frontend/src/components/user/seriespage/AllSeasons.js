@@ -28,7 +28,7 @@ class AllSeasons extends Component {
     }
 
     getSeasons() {
-        axios.get(`${serverAddress}series/${this.props.series_id}/seasons`,
+        axios.get(`${serverAddress}series/${this.props.seriesId}/seasons`,
             {withCredentials: true})
         .then(response => {
             this.setState({
@@ -88,7 +88,6 @@ class AllSeasons extends Component {
                         errorBlocks
                     }
                 </div>
-
 
             );
 

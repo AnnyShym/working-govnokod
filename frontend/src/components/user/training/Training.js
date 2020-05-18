@@ -128,9 +128,9 @@ class Training extends Component {
     		return null;
     	}
 
-	    if (!this.state.allowed) {
-	        return <Redirect to="/signin" />
-	    }
+        if (!this.state.allowed) {
+            return <Redirect to="/signin" />
+        }
 
     	if (this.state.vocabulary.length === 0) {
 	        return(

@@ -1,0 +1,68 @@
+.account-page {
+	background-image: url(../img/training_bg.jpg);
+	background-size: cover;
+	background-color: rgba(0, 0, 0, 0.7);
+	background-position: center;
+	min-height: 100%;
+}
+
+.account-container {
+	background-color: rgba(255, 255, 255, 0.8);
+	width: 15%;
+}
+
+.page-container {
+	width: 85%;
+}
+
+.account-shadow {
+	box-shadow: 0.5rem 0.5rem 1rem rgba(255, 255, 255, 0.5);
+}
+
+.clr-orange {
+	color: #ff8500;
+}
+
+.clr-yellow {
+	color: #ffd101;
+}
+
+.clr-purple {
+	color: #8508ae;
+}
+
+.account-link {
+	cursor: pointer;
+}
+
+.account-link:hover {
+	-webkit-transform: rotateZ(10deg);
+	-ms-transform: rotateZ(10deg);
+	transform: rotateZ(10deg);
+}
+
+.transparent {
+	filter: alpha(opacity = 50);
+    opacity: 0.5; 
+}
+
+.award-block {
+	height: 33.3%;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.table-scrollbar {
+	position: relative;
+	overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+	display: block;
+}
+
+.series-card {
+	width: 45%;
+}

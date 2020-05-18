@@ -11,6 +11,7 @@ const socketIO = require('socket.io');
 const say = require('say');
 
 const config = require('./modules/config');
+const joinArrayIntoQuery = require('./modules/join_array');
 
 const app = express();
 var server = http.Server(app);
@@ -307,6 +308,178 @@ app.get('/tables', function(req, res) {
     });
 });
 
+app.get('/countries', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('country_id, name', 'countries', ``,
+                'ORDER BY name ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/age-limits', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('*', 'age_limits', ``, 'ORDER BY age_limit_id ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/english-levels', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('*', 'english_levels', ``, 'ORDER BY english_level_id ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/tags', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('*', 'tags', ``, 'ORDER BY name ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/genres', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('*', 'genres', ``, 'ORDER BY name ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/creators', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('creator_id, name, middle_name, surname, pseudonym', 'creators', ``, 
+                'ORDER BY name, middle_name, surname, pseudonym ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/actors', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('actor_id, name, middle_name, surname, pseudonym', 'actors', ``, 
+                'ORDER BY name, middle_name, surname, pseudonym ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/producers', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('producer_id, name, middle_name, surname, pseudonym', 'producers', ``, 
+                'ORDER BY name, middle_name, surname, pseudonym ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
 app.get('/series/:id/seasons', function(req, res) {
     const userCookieJwt = req.cookies.user_auth;
     jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
@@ -338,15 +511,27 @@ app.get('/series/:id', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            selectRow('series', `series_id = ${req.params.id}`,
-                function (err, statusCode, msg, row) {
+
+            const sql = `SELECT series.series_id, title, countries.name AS country, rating, 
+                languages.name AS original_language, english_level, age_limit, 
+                opening_theme, imdb_id, premiere_date, description 
+                FROM series 
+                INNER JOIN countries ON series.country_id = countries.country_id 
+                INNER JOIN languages ON series.original_language_id = languages.language_id 
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
+                INNER JOIN age_limits ON series.age_limit_id = age_limits.age_limit_id 
+                WHERE series_id = ${req.params.id};`;
+
+            db.query(sql, (err, rows) => {
                 if (err) {
-                    res.status(statusCode).json({errors: [{msg: msg}]});
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
                 }
                 else {
-                    res.status(statusCode).json({row: row});
+                    res.status(statusCodes.OK).json({rows: rows});
                 }
             });
+
         }
     });
 });
@@ -359,7 +544,7 @@ app.get('/season/:id/episodes', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            select('episode_id, serial_number, title, premiere_date, description',
+            select('episode_id, serial_number, title, premiere_date',
                 'episodes', `WHERE season_id = ${req.params.id}`,
                 'ORDER BY serial_number ASC',
                  function (err, statusCode, msg, rows) {
@@ -370,39 +555,6 @@ app.get('/season/:id/episodes', function(req, res) {
                     res.status(statusCode).json({rows: rows});
                 }
             });
-        }
-    });
-});
-
-app.get('/series/:op/:prevind/:seriesPerPage', function(req, res) {
-    const userCookieJwt = req.cookies.user_auth;
-    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
-        if (err) {
-            res.status(statusCodes.UNAUTHORIZED).json(
-                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
-        }
-        else {
-            if (req.params.op === 'previous' || req.params.op === 'next') {
-
-                let where = `WHERE series_id > ${req.params.prevind}`;
-                let op = 'ASC';
-                if (req.params.op === 'previous') {
-                    where = `WHERE series_id <= ${req.params.prevind}`;
-                    op = 'ASC';
-                }
-
-                const orderBy = `ORDER BY series_id ${op} LIMIT 0, ${req.params.seriesPerPage}`;
-                select('series_id, title, country, original_language, premiere_date, description, rating', 'series',
-                    where, orderBy, function (err, statusCode, msg, rows) {
-                    if (err) {
-                        res.status(statusCode).json({errors: [{msg: msg}]});
-                    }
-                    else {
-                        res.status(statusCode).json({rows: rows});
-                    }
-                });
-
-            }
         }
     });
 });
@@ -494,6 +646,29 @@ app.get('/vocabulary', function(req, res) {
     });
 });
 
+app.get('/all-vocabulary', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            selectAllForIntermediateTable('key_words_for_users', 'users', 'key_words',
+                'key_words.key_word_id, word, translation, progress', 'user_id', 'key_word_id', 'user_id', 'key_word_id', 
+                `WHERE users.user_id = ${decoded.id}`, 'ORDER BY progress DESC, word ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
 app.post('/save-progress', function(req, res) {
     const userCookieJwt = req.cookies.user_auth;
     jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
@@ -508,6 +683,501 @@ app.post('/save-progress', function(req, res) {
                 res.sendStatus(statusCode);
             }
         });
+    });
+});
+
+app.get('/progress', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('learned_count, trained_count, correct_count',
+                'users', `WHERE user_id = ${decoded.id}`,
+                '',
+                 function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/is-favourite/:id', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            selectAllRows('favourite_series', `WHERE user_id = ${decoded.id} AND series_id = ${req.params.id}`,
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.post('/favourites', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            insertRow('favourite_series', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`, 
+                function (err, statusCode, msg) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.sendStatus(statusCode);
+                }
+            });
+        }
+    });
+});
+
+app.delete('/favourites/:id', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            deleteRow('favourite_series', `user_id = ${decoded.id} AND series_id = ${req.params.id}`, 
+                function (err, statusCode, msg) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.sendStatus(statusCode);
+                }
+            });
+        }
+    });
+});
+
+app.get('/favourites/:page/:perPage', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT series.series_id, title, countries.name AS country, rating, 
+                languages.name AS original_language, english_levels.english_level, 
+                premiere_date, description 
+                FROM favourite_series 
+                INNER JOIN series ON favourite_series.series_id = series.series_id 
+                INNER JOIN countries ON series.country_id = countries.country_id 
+                INNER JOIN languages ON series.original_language_id = languages.language_id 
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
+                WHERE user_id = ${decoded.id} 
+                ORDER BY title ASC 
+                LIMIT ${req.params.page * req.params.perPage}, ${req.params.perPage};`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/is-already-watched/:id', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            selectAllRows('already_watched_series', `WHERE user_id = ${decoded.id} AND series_id = ${req.params.id}`,
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.post('/already-watched', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            insertRow('already_watched_series', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`, 
+                function (err, statusCode, msg) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.sendStatus(statusCode);
+                }
+            });
+        }
+    });
+});
+
+app.delete('/already-watched/:id', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            deleteRow('already_watched_series', `user_id = ${decoded.id} AND series_id = ${req.params.id}`, 
+                function (err, statusCode, msg) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.sendStatus(statusCode);
+                }
+            });
+        }
+    });
+});
+
+app.get('/already-watched/:page/:perPage', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT series.series_id, title, countries.name AS country, rating, 
+                languages.name AS original_language, english_levels.english_level, 
+                premiere_date, description 
+                FROM already_watched_series
+                INNER JOIN series ON already_watched_series.series_id = series.series_id 
+                INNER JOIN countries ON series.country_id = countries.country_id 
+                INNER JOIN languages ON series.original_language_id = languages.language_id 
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
+                WHERE user_id = ${decoded.id} 
+                ORDER BY title ASC 
+                LIMIT ${req.params.page * req.params.perPage}, ${req.params.perPage};`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/is-in-wish-list/:id', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            selectAllRows('series_in_wish_list', `WHERE user_id = ${decoded.id} AND series_id = ${req.params.id}`,
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.post('/wish-list', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            insertRow('series_in_wish_list', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`, 
+                function (err, statusCode, msg) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.sendStatus(statusCode);
+                }
+            });
+        }
+    });
+});
+
+app.delete('/wish-list/:id', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            deleteRow('series_in_wish_list', `user_id = ${decoded.id} AND series_id = ${req.params.id}`, 
+                function (err, statusCode, msg) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.sendStatus(statusCode);
+                }
+            });
+        }
+    });
+});
+
+app.get('/wish-list/:page/:perPage', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT series.series_id, title, countries.name AS country, rating, 
+                languages.name AS original_language, english_levels.english_level, 
+                premiere_date, description 
+                FROM series_in_wish_list
+                INNER JOIN series ON series_in_wish_list.series_id = series.series_id 
+                INNER JOIN countries ON series.country_id = countries.country_id 
+                INNER JOIN languages ON series.original_language_id = languages.language_id 
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
+                WHERE user_id = ${decoded.id} 
+                ORDER BY title ASC 
+                LIMIT ${req.params.page * req.params.perPage}, ${req.params.perPage};`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/series/:seriesId/tags', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT tags.tag_id, name 
+                FROM tags_for_series 
+                INNER JOIN tags ON tags_for_series.tag_id = tags.tag_id 
+                WHERE series_id = ${req.params.seriesId}
+                ORDER BY name ASC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/series/:seriesId/genres', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT genres.genre_id, name 
+                FROM genres_for_series 
+                INNER JOIN genres ON genres_for_series.genre_id = genres.genre_id 
+                WHERE series_id = ${req.params.seriesId}
+                ORDER BY name ASC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds/:actorIds/:creatorIds/:producerIds/:orderBy/:direction/:page/:perPage', 
+    function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            let whereCriteria = [];
+            let joinCriteria = [];
+            let count = 1;
+            let havingColumn = null;
+
+            if (req.params.title !== " ") {
+                whereCriteria.push(`title LIKE "%${req.params.title}%"`);
+            }
+
+            if (req.params.englishLevelId !== " ") {
+                whereCriteria.push(`english_levels.english_level_id = ${req.params.englishLevelId}`);
+            }
+
+            if (req.params.countryId !== " ") {
+                whereCriteria.push(`countries.country_id = ${req.params.countryId}`);
+            }
+
+            if (req.params.ageLimitId !== " ") {
+                whereCriteria.push(`age_limits.age_limit_id = ${req.params.ageLimitId}`);
+            }
+            
+            if (req.params.tagIds !== " ") {
+                const criteria = joinArrayIntoQuery(req.params.tagIds.split('&'), "tag_id");
+                whereCriteria.push(criteria.str);
+                count *= criteria.count;
+                havingColumn = "tag_id";
+                joinCriteria.push("INNER JOIN tags_for_series ON series.series_id = tags_for_series.series_id");           
+            }
+
+            if (req.params.genreIds !== " ") {
+                const criteria = joinArrayIntoQuery(req.params.genreIds.split('&'), "genre_id");
+                whereCriteria.push(criteria.str);
+                count *= criteria.count;
+                havingColumn = "genre_id";
+                joinCriteria.push("INNER JOIN genres_for_series ON series.series_id = genres_for_series.series_id");           
+            }
+
+            if (req.params.actorIds !== " ") {
+                const criteria = joinArrayIntoQuery(req.params.actorIds.split('&'), "actor_id");
+                whereCriteria.push(criteria.str);
+                count *= criteria.count;
+                havingColumn = "actor_id";
+                joinCriteria.push("INNER JOIN actors_in_series ON series.series_id = actors_in_series.series_id");           
+            }
+
+            if (req.params.creatorIds !== " ") {
+                const criteria = joinArrayIntoQuery(req.params.creatorIds.split('&'), "creator_id");
+                whereCriteria.push(criteria.str);
+                count *= criteria.count;
+                havingColumn = "creator_id";
+                joinCriteria.push("INNER JOIN creators_in_series ON series.series_id = creators_in_series.series_id");           
+            }
+
+            if (req.params.producerIds !== " ") {
+                const criteria = joinArrayIntoQuery(req.params.producerIds.split('&'), "producer_id");
+                whereCriteria.push(criteria.str);
+                count *= criteria.count;
+                havingColumn = "producer_id";
+                joinCriteria.push("INNER JOIN producers_in_series ON series.series_id = producers_in_series.series_id");           
+            }
+
+            let joins = joinCriteria.join(" ");
+            if (joinCriteria.length > 0) {
+                joins = `${joins} `;
+            }
+
+            let where = whereCriteria.join(" AND ");
+            if (whereCriteria.length > 0) {
+                where = `WHERE ${where} `;
+            }
+
+            let groupBy = "";
+            if (havingColumn) {
+                groupBy = `GROUP BY series.series_id 
+                    HAVING COUNT(${havingColumn}) = ${count} `;
+            }
+
+            let orderByTitle = " ";
+            if (req.params.orderBy !== "title") {
+                orderByTitle = ", title ASC ";
+            }
+
+            const sql = `SELECT DISTINCT series.series_id, title, countries.name AS country, 
+                premiere_date, languages.name AS original_language, 
+                english_levels.english_level, description, rating 
+                FROM series 
+                INNER JOIN countries ON series.country_id = countries.country_id 
+                INNER JOIN languages ON series.original_language_id = languages.language_id 
+                INNER JOIN age_limits ON series.age_limit_id = age_limits.age_limit_id 
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
+                ${joins}
+                ${where}
+                ${groupBy}
+                ORDER BY series.${ req.params.orderBy.replace(/-/g, '_') } ${ req.params.direction.toUpperCase() }${ orderByTitle }
+                LIMIT ${req.params.page * req.params.perPage}, ${req.params.perPage};`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
     });
 });
 

@@ -7,10 +7,10 @@ import Video from './Video';
 import serverAddress from '../../../modules/server';
 import statusCodes from '../../../modules/status_codes';
 import makeUnique from '../../../modules/make_unique';
+import yandexKey from '../../../modules/yandex_key';
 
 import '../../../styles/key_word.css';
 
-const YANDEX_KEY = "trnsl.1.1.20200505T161954Z.a1a1366e47552125.c3b8fb4f9cb74794c8f03fe36728abef671ec1ed";
 const language = "en-ru";
 
 class VideoWithKeyWords extends Component { 
@@ -30,11 +30,21 @@ class VideoWithKeyWords extends Component {
 
     handleCueChange = e => {
 
-        let words = [...e.target.track.activeCues].map(t => t.text)
+        let words = null;
+        if ([...e.target.track.activeCues].map(t => t.text)
             .join(" ")
             .toLowerCase()
             .replace(/(<.*?>)+/gi, '')
-            .match(/[a-z'\-]+/gi);
+            .match(/[a-z'\-]+/gi) !== null) {
+
+            words = [...e.target.track.activeCues].map(t => t.text)
+            .join(" ")
+            .toLowerCase()
+            .replace(/(<.*?>)+/gi, '')
+            .match(/[a-z'\-]+/gi)
+            .filter(makeUnique);
+
+        }
 
         let divKeyWords = document.getElementById("key-words");
         let divBlock = document.createElement('div');
@@ -42,8 +52,6 @@ class VideoWithKeyWords extends Component {
         divBlock.setAttribute('class', "d-flex mb-5");
 
         if (words !== null) {
-
-            words.filter(makeUnique);
 
             for(let i = 0; i < words.length; i++) {
 
@@ -76,7 +84,7 @@ class VideoWithKeyWords extends Component {
 
         const word = e.target.innerHTML;
 
-        axios.get(`https://translate.yandex.net/api/v1.5/tr.json/translate?key=${YANDEX_KEY}&lang=${language}&text=${word}`)
+        axios.get(`https://translate.yandex.net/api/v1.5/tr.json/translate?key=${yandexKey}&lang=${language}&text=${word}`)
         .then((response) => {
 
             const translation = response.data.text[0];
