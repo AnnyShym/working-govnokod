@@ -1,0 +1,30 @@
+.title {
+	color: #48CFAD;
+	font-size: 1.5rem;	
+	font-weight: 500;
+}
+
+.description {
+	word-wrap: break-word;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.video {
+	width: 90%;
+}
+
+video:focus {
+	outline: none;
+}
+
+.video-border {
+	border: 1rem solid #000000;
+	border-radius: 1rem;
+}
+
+.icon-width {
+	width: 50px;
+}

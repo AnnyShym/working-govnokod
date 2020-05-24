@@ -17,7 +17,7 @@
 }
 
 .series-title {
-    font-size: 1.3rem;
+    font-size: 1.3rem;	
 }
 
 .pointer {
@@ -32,7 +32,19 @@ a:hover {
 	color: #48cfad;
 }
 
-.border-btm {
-	border: 0;
-	border-bottom: 0.08rem solid lightgrey;
+.border-t {
+	border-top: 0.08rem solid #ECF0F1;
+}
+
+.border-b {
+	border-bottom: 0.08rem solid #ECF0F1;
+}
+
+.description {
+	word-wrap: break-word;
+}
+
+.card-total-rating {
+	color: #9CB5B9;
+	font-weight: 600;
 }

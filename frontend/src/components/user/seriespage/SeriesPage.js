@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import NavigationBar from '../NavigationBar';
 import SeriesInfo from './SeriesInfo';
 import AllSeasons from './AllSeasons';
+import ReviewsBlock from '../reviews/ReviewsBlock';
 
 class SeriesPage extends Component {
     render() {
@@ -12,6 +13,7 @@ class SeriesPage extends Component {
                 <NavigationBar />
                 <SeriesInfo seriesId={ this.props.match.params.id } />
                 <AllSeasons seriesId={ this.props.match.params.id } />
+                <ReviewsBlock seriesId={ this.props.match.params.id } />
             </div>
 
         );

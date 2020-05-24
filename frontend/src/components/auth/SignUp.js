@@ -136,21 +136,26 @@ class SignUp extends Component {
                         </div>
                         <form method="post" className="d-flex flex-column mb-3" onSubmit={ this.onSubmit }>
                             <div className="form-group">
-                                <input type="email" name={ this.state.columns[1] } placeholder={ this.state.columnsAlt[1] } value={ this.state.newInfo.login } onChange= { this.onChangeLogin } className="form-control" id="exampleFormControlInput1" required />
+                                <input type="email" name={ this.state.columns[1] } placeholder={ this.state.columnsAlt[1] } value={ this.state.newInfo.login } onChange= { this.onChangeLogin } className="form-control auth-form-control" id="exampleFormControlInput1" required />
                             </div>
                             <div className="form-group">
-                                <input type="text" name={ this.state.columns[3] } placeholder={ this.state.columnsAlt[3] } value={ this.state.newInfo.nickname } onChange= { this.onChangeNickName } className="form-control" id="exampleFormControlInput2" required />
+                                <input type="text" name={ this.state.columns[3] } placeholder={ this.state.columnsAlt[3] } value={ this.state.newInfo.nickname } onChange= { this.onChangeNickName } className="form-control auth-form-control" id="exampleFormControlInput2" required />
                             </div>
                             <div className="form-group">
-                                <input type="password" name={ this.state.columns[2] } placeholder={ this.state.columnsAlt[2] } value={ this.state.newInfo.password } onChange= { this.onChangePassword } className="form-control" id="exampleFormControlInput3" required />
+                                <input type="password" name={ this.state.columns[2] } placeholder={ this.state.columnsAlt[2] } value={ this.state.newInfo.password } onChange= { this.onChangePassword } className="form-control auth-form-control" id="exampleFormControlInput3" required />
                             </div>
                             <div className="form-group">
-                                <input type="password" name="confirm_password" placeholder="Confirm Password" value={ this.state.newInfo.confirmedPassword } onChange= { this.onChangeConfirmedPassword } className="form-control" id="exampleFormControlInput4" required />
+                                <input type="password" name="confirm_password" placeholder="Confirm Password" value={ this.state.newInfo.confirmedPassword } onChange= { this.onChangeConfirmedPassword } className="form-control auth-form-control" id="exampleFormControlInput4" required />
                             </div>
                             <button type="submit" name="Sign Up" className="btn btn-dark align-self-center">Sign Up</button>
                         </form>
-                        <div>
-                            <p className="m-0">Already have an account? <Link to="/signin" rel="noopener" className="link">Sign In</Link></p>
+                        <div className="d-flex justify-content-center">
+                            <div>
+                                Already have an account?
+                            </div>
+                            <Link to="/signin" rel="noopener" className="ml-1 link">
+                                Sign In
+                            </Link>
                         </div>
                     </div>
                 </div>

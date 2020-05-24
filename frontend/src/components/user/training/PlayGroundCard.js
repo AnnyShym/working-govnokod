@@ -13,7 +13,7 @@ class PlayGroundCard extends Component {
                     <Link to={ this.props.link } rel="noopener" className="btn training-btn text-white border-0">Go</Link>
                 </div>
                 <div>
-                    <img src={ require(`../../../img/training-${this.props.number}.jpg`) } className="card-img-top rounded h-100" alt={ this.props.title } />
+                    <img src={ require(`../../../img/training-${this.props.number}.jpg`) } className="card-img-top h-100 w-100 rounded" alt={ this.props.title } />
                 </div>
             </div>
 

@@ -5,13 +5,18 @@
   "dependencies": {
     "@khanacademy/react-multi-select": "^0.3.3",
     "axios": "^0.18.1",
+    "emoji-picker-react": "^3.1.6",
+    "moment": "^2.26.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-moment": "^0.9.7",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-select": "^3.1.0",
     "react-simple-keyboard": "^2.3.28",
-    "socket.io-client": "^2.2.0"
+    "socket.io-client": "^2.2.0",
+    "sweetalert2": "^9.13.1",
+    "sweetalert2-react-content": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

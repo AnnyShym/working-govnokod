@@ -1,0 +1,45 @@
+.pointer {
+	cursor: pointer;
+}
+
+.underlined {
+	border-bottom: 0.2rem solid #48CFAD;
+}
+
+.round {
+	border-radius: 5rem;
+	border: 0.2rem solid #ECF0F1;
+}
+
+.round:hover {
+	border: 0.2rem solid #48CFAD;
+}
+
+.cast-align {
+	width: 20%;
+}
+
+.biography {
+	word-wrap: break-word;
+}
+
+.name {
+    font-size: 1.3rem;
+}
+
+a {
+	color: #48cfad;
+}
+
+a:hover {
+	color: #48cfad;
+}
+
+.border-y {
+	border-top: 0.08rem solid #ECF0F1;
+	border-bottom: 0.08rem solid #ECF0F1;
+}
+
+.header {
+	border-bottom: 0.3rem solid #48CFAD;
+}

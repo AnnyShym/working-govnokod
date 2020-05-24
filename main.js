@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const http = require('http');
 const socketIO = require('socket.io');
 const say = require('say');
+const moment = require('moment');
 
 const config = require('./modules/config');
 const joinArrayIntoQuery = require('./modules/join_array');
@@ -44,6 +45,7 @@ const statusCodes = {
     PARTIAL_CONTENT: 206,
     BAD_REQUEST: 400,
     UNAUTHORIZED: 401,
+    NOT_FOUND: 404,
     INTERNAL_SERVER_ERROR: 500
 }
 
@@ -67,7 +69,8 @@ const db = mysql.createConnection({
     port: 3308,
     user: 'root',
     password: '',
-    database: DB_NAME
+    database: DB_NAME,
+    charset: 'utf8mb4'
 });
 
 db.connect((err) => {
@@ -480,6 +483,65 @@ app.get('/producers', function(req, res) {
     });
 });
 
+app.get('/series/:seriesId/seasons/:seasonNumber/count', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT COUNT(*) AS total_count 
+                FROM episodes 
+                INNER JOIN seasons ON episodes.season_id = seasons.season_id 
+                WHERE seasons.series_id = ${req.params.seriesId} AND 
+                      seasons.serial_number = ${req.params.seasonNumber};`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({totalCount: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/series/:seriesId/seasons/:seasonNumber/episodes/:episodeNumber', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT episode_id, episodes.title, episodes.premiere_date, episodes.description
+                FROM episodes 
+                INNER JOIN seasons ON episodes.season_id = seasons.season_id 
+                WHERE seasons.series_id = ${req.params.seriesId} AND 
+                      seasons.serial_number = ${req.params.seasonNumber} AND 
+                      episodes.serial_number = ${req.params.episodeNumber};`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
 app.get('/series/:id/seasons', function(req, res) {
     const userCookieJwt = req.cookies.user_auth;
     jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
@@ -544,8 +606,8 @@ app.get('/season/:id/episodes', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            select('episode_id, serial_number, title, premiere_date',
-                'episodes', `WHERE season_id = ${req.params.id}`,
+            select('episode_id, serial_number, title', 'episodes', 
+                `WHERE season_id = ${req.params.id}`,
                 'ORDER BY serial_number ASC',
                  function (err, statusCode, msg, rows) {
                 if (err) {
@@ -1181,6 +1243,215 @@ app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds
     });
 });
 
+app.get('/comments/:about/:id', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT users.user_id, nickname, datetime, content 
+                FROM comments_about_${req.params.about.toLowerCase()} 
+                INNER JOIN users ON comments_about_${req.params.about.toLowerCase()}.user_id = users.user_id 
+                WHERE ${req.params.about.slice(0, -1)}_id = ${req.params.id}
+                ORDER BY datetime DESC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows, userId: decoded.id});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/reviews/:seriesId', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT users.user_id, nickname, datetime, content 
+                FROM reviews 
+                INNER JOIN users ON reviews.user_id = users.user_id 
+                WHERE series_id = ${req.params.seriesId} 
+                ORDER BY datetime DESC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows, userId: decoded.id});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/series/:seriesId/actors', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT actor_id 
+                FROM actors_in_series 
+                WHERE series_id = ${req.params.seriesId}
+                ORDER BY actor_id ASC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/series/:seriesId/creators', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT creator_id 
+                FROM creators_in_series 
+                WHERE series_id = ${req.params.seriesId}
+                ORDER BY creator_id ASC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/series/:seriesId/producers', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT producer_id 
+                FROM producers_in_series 
+                WHERE series_id = ${req.params.seriesId}
+                ORDER BY producer_id ASC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/cast/:cast/:castId/series', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT series_id 
+                FROM ${req.params.cast}_in_series 
+                WHERE ${req.params.cast.slice(0, -1)}_id = ${req.params.castId}
+                ORDER BY series_id ASC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/cast/:cast/:id', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const table = req.params.cast.toLowerCase();
+
+            const sql = `SELECT ${table}.name, middle_name, surname, pseudonym, 
+                countries.name AS country, date_of_birth, biography, imdb_id 
+                FROM ${table} 
+                LEFT OUTER JOIN countries ON ${table}.country_id = countries.country_id 
+                WHERE ${table.slice(0, -1)}_id = ${req.params.id}`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/covers/x-small/:id.jpg', function(req, res) {
+    res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/${req.params.id}/${req.params.id}_x_small.jpg`, (err) => {
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/no_image_x_small.png`);
+        }
+    });
+});
+
 app.get('/covers/small/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/${req.params.id}/${req.params.id}_small.jpg`, (err) => {
         if (err) {
@@ -1193,6 +1464,38 @@ app.get('/covers/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/${req.params.id}/${req.params.id}.jpg`, (err) => {
         if (err) {
             res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/no_image.png`);
+        }        
+    });
+});
+
+app.get('/episodes/small/:id.jpg', function(req, res) {
+    res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/episodes/${req.params.id}/${req.params.id}_small.jpg`, (err) => {
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/episodes/no_video_small.jpg`);
+        }        
+    });
+});
+
+app.get('/episodes/:id.jpg', function(req, res) {
+    res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/episodes/${req.params.id}/${req.params.id}.jpg`, (err) => {
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/episodes/no_video.jpg`);
+        }        
+    });
+});
+
+app.get('/:cast/small/:id.jpg', function(req, res) {
+    res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/${req.params.cast}/${req.params.id}/${req.params.id}_small.jpg`, (err) => {
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/${req.params.cast}/no_image_small.jpg`);
+        }
+    });
+});
+
+app.get('/:cast/:id.jpg', function(req, res) {
+    res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/${req.params.cast}/${req.params.id}/${req.params.id}.jpg`, (err) => {
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/${req.params.cast}/no_image.png`);
         }        
     });
 });
@@ -1320,6 +1623,71 @@ io.on('connection', (socket) => {
                             statusCodes.OK, row: row, token: token, errors: []});
                     }
                 });
+            }
+        });
+    });
+
+    socket.on('add comment', (about, id, content, token) => {
+        jwt.verify(token, config.KEY, function(err, decoded) {
+            if (err) {
+                socket.emit('add comment', {statusCode: statusCodes.UNAUTHORIZED,
+                    errors: [{ msg: UNAUTHORIZED_MSG }]});
+            }
+            else {
+
+                const datetime = moment().format(); 
+
+                const newValues = `user_id = ${decoded.id}, ${about.slice(0, -1)}_id = ${
+                    id}, content = "${content}", datetime = "${datetime}"`;
+
+                insertRow(`comments_about_${about.toLowerCase()}`, newValues, 
+                    function (err, statusCode, msg) {
+                    if (err) {
+                        socket.emit('add comment', {statusCode: statusCode,
+                            errors: [{ msg: msg }]});
+                    }
+                    else {
+                        socket.emit('add comment', {statusCode: statusCode,
+                            errors: [{ msg: msg }]});
+                        io.sockets.emit('get new comment', {statusCode:
+                            statusCodes.OK, rows: [{user_id: decoded.id, 
+                            nickname: decoded.nickname, content: content, 
+                            datetime: datetime}], token: token, errors: []});
+                    }
+                });
+
+            }
+        });
+    });
+
+    socket.on('add review', (seriesId, content, token) => {
+        jwt.verify(token, config.KEY, function(err, decoded) {
+            if (err) {
+                socket.emit('add review', {statusCode: statusCodes.UNAUTHORIZED,
+                    errors: [{ msg: UNAUTHORIZED_MSG }]});
+            }
+            else {
+
+                const datetime = moment().format(); 
+
+                const newValues = `user_id = ${decoded.id}, series_id = ${
+                    seriesId}, content = "${content}", datetime = "${datetime}"`;
+
+                insertRow(`reviews`, newValues, function (err, statusCode, msg) {
+                    if (err) {
+                        socket.emit('add review', {statusCode: statusCode,
+                            errors: [{ msg: msg }]});
+                    }
+                    else {
+                        socket.emit('add review', {statusCode: statusCode,
+                            errors: [{ msg: msg }]});
+                        io.sockets.emit('get new review', {statusCode:
+                            statusCodes.OK, rows: [{user_id: decoded.id, 
+                            nickname: decoded.nickname, content: content, 
+                            datetime: datetime}], token: token, errors: []});
+                    }
+                });
+
             }
         });
     });

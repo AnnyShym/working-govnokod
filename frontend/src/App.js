@@ -5,10 +5,11 @@ import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import AllSeries from './components/user/allseries/AllSeries';
 import SeriesPage from './components/user/seriespage/SeriesPage';
-import Episode from './components/user/seriespage/Episode';
+import Episode from './components/user/episodes/Episode';
 import PlayGroundPage from './components/user/training/PlayGroundPage';
 import Training from './components/user/training/Training';
 import AccountPage from './components/user/account/AccountPage';
+import CastPage from './components/user/cast/CastPage';
 
 import AllTables from './components/admin/AllTables';
 import Actors from './components/admin/actors/Actors';
@@ -34,13 +35,14 @@ class App extends Component {
                     <Route exact path='/' component={ AllSeries }/>
                     <Route exact path='/signup' component={ SignUp }/>
                     <Route exact path='/signin' component={ SignIn }/>
-                    <Route exact path='/series/:criteria/:name' component={ AllSeries }/>
+                    <Route exact path='/series/:seriesId/seasons/:seasonNumber/episodes/:episodeNumber' component={ Episode }/>
+                    <Route exact path='/series/:criteria/:id' component={ AllSeries }/>
                     <Route exact path='/series/:id' component={ SeriesPage }/>
                     <Route exact path='/series' component={ AllSeries }/>
-                    <Route exact path='/episodes/:id' component={ Episode }/>
                     <Route exact path='/play-ground' component={ PlayGroundPage }/>
                     <Route exact path='/training/:kind' component={ Training }/>
                     <Route exact path='/account' component={ AccountPage }/>
+                    <Route exact path='/:cast/:id' component={ CastPage }/>
 
                     <Route exact path='/tables' component={ AllTables }/>
                     <Route exact path='/tables/actors/delete/:id' component={ DeleteActor } />

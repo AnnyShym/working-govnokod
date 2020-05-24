@@ -7,8 +7,6 @@ import SeasonInfo from './SeasonInfo';
 import serverAddress from '../../../modules/server';
 import statusCodes from '../../../modules/status_codes';
 
-import '../../../styles/info.css';
-
 class AllSeasons extends Component {
 
     constructor(props) {
@@ -16,7 +14,9 @@ class AllSeasons extends Component {
         super(props);
 
         this.state = {
-            seasons: [],
+            seasons: null,
+            currentSeason: null,
+            episodes: null,
             allowed: true,
             errors: []
         };
@@ -42,7 +42,6 @@ class AllSeasons extends Component {
             if (err.response && err.response.status ===
                 statusCodes.UNAUTHORIZED) {
                 this.setState({
-                    seasons: [],
                     allowed: false,
                     errors: err.response.data.errors
                 });
@@ -50,7 +49,35 @@ class AllSeasons extends Component {
             if (err.response && err.response.status ===
                 statusCodes.INTERNAL_SERVER_ERROR) {
                 this.setState({
-                    seasons: [],
+                    errors: err.response.data.errors
+                });
+            }
+        })
+    }
+
+    getEpisodes = (seasonId, index) => {
+        axios.get(`${serverAddress}season/${seasonId}/episodes`,
+            {withCredentials: true})
+        .then(response => {
+            this.setState({
+                episodes: response.data.rows,
+                currentSeason: index,
+                allowed: true,
+                errors: []
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            if (err.response && err.response.status ===
+                statusCodes.UNAUTHORIZED) {
+                this.setState({
+                    allowed: false,
+                    errors: err.response.data.errors
+                });
+            }
+            if (err.response && err.response.status ===
+                statusCodes.INTERNAL_SERVER_ERROR) {
+                this.setState({
                     errors: err.response.data.errors
                 });
             }
@@ -58,41 +85,50 @@ class AllSeasons extends Component {
     }
 
     render() {
-        if (this.state.seasons.length === 0 && this.state.errors.length === 0) {
-            return <div></div>;
+
+        if (!this.state.allowed) {
+            return <Redirect to="/signin" />
         }
-        else {
 
-            if (!this.state.allowed) {
-                return <Redirect to="/signin" />
-            }
+        if (!this.state.seasons) {
+            return null;
+        }
 
-            const errorBlocks = this.state.errors.map((error) =>
-                <div key={ error.msg } className="container">
-                    <div className="alert alert-danger">{ error.msg }</div>
-                </div>
-            );
+        const errorBlocks = this.state.errors.map((error) =>
+            <div key={ error.msg } className="container">
+                <div className="alert alert-danger">{ error.msg }</div>
+            </div>
+        );
 
-            const seasonBlocks = this.state.seasons.map((season) =>
-                <SeasonInfo key={ season.serial_number } season={ season } />
-            );
+        return(
 
-            return(
-
-                <div>
-                    { this.state.errors.length === 0 ?
-                        <div>
-                           { seasonBlocks }
+            <div className="bg-white">
+                { (this.state.errors.length > 0) ?
+                    errorBlocks
+                :
+                    <div>
+                        <div className="d-flex justify-content-around">
+                        {
+                            this.state.seasons.map((season, index) =>
+                                <div onClick={ () => this.getEpisodes(season.season_id, index) } key={ index } className="font-weight-bold pointer p-3 underlined">
+                                    Season { season.serial_number }
+                                </div>
+                            )
+                        }                  
                         </div>
-                    :
-                        errorBlocks
-                    }
-                </div>
+                        { (this.state.currentSeason !== null) ?
+                            <SeasonInfo seriesId={ this.props.seriesId } season={ this.state.seasons[this.state.currentSeason] } episodes={ this.state.episodes } />
+                        :
+                            <div></div>
+                        }
+                    </div>
+                }
+            </div>
 
-            );
+        );
 
-        }
     }
+
 }
 
 export default AllSeasons;

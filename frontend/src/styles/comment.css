@@ -1,0 +1,50 @@
+.nickname {
+	font-size: 0.8rem;
+}
+
+.datetime {
+	font-size: 0.5rem;
+	color: #5E676E;
+}
+
+.header {
+	border-bottom: 0.3rem solid #48CFAD;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.comment-form {
+  	border-bottom: 0.2rem solid #48CFAD;
+}
+
+textarea {
+	width: 90%;
+}
+
+textarea:focus {
+	outline: none;
+}
+
+.bubble {
+	position: relative;
+	border-radius: 1.3rem;
+  	box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, 0.13);
+   	word-wrap: break-word;
+   	margin-top: 2%;
+}
+
+.bubble:before {
+	content: '';
+	position: absolute;
+	bottom: 100%;
+	border: 0.6rem solid transparent;
+	border-bottom-color: #FFFFFF;
+	filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, 0.07));
+}
+
+.emoji-panel {
+	position: relative;
+	z-index: 1;
+}

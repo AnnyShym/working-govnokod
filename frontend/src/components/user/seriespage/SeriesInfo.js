@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
 import socketIOClient from 'socket.io-client';
+import Moment from 'react-moment';
 
 import Tags from './Tags';
 import Genres from './Genres';
+import CastBlock from './CastBlock';
 
 import serverAddress from '../../../modules/server';
 import statusCodes from '../../../modules/status_codes';
-import getDate from '../../../modules/get_date';
 import addZeros from '../../../modules/add_zeros';
 
 import '../../../styles/series_info.css';
@@ -450,7 +451,7 @@ class SeriesInfo extends Component {
     render() {
 
         if (this.state.series.length === 0 && this.state.errors.length === 0) {
-            return <div></div>; 
+            return null; 
         }
         else {
 
@@ -475,7 +476,7 @@ class SeriesInfo extends Component {
 
             return(
 
-                <div className="border-btm">
+                <div>
                     { (this.state.errors.length > 0) ?
                         <div className="card">
                             <div className="card-body">
@@ -483,75 +484,155 @@ class SeriesInfo extends Component {
                             </div>
                         </div>
                     :
-                        <div className="card">
-                            <div className="d-flex card-body px-4">
-                                <div>
+                        <div>
+                            <div className="d-flex bg-white p-4">
+                                <div className="d-flex flex-column">
                                     <Link to={ `/series/${this.state.series[0].series_id}` } rel="noopener">
-                                        <img src={ address} alt={ this.state.series[0].title } className="cover"/>
+                                        <img src={address} alt={ this.state.series[0].title } className="cover"/>
                                     </Link>
+                                    <div className="d-flex justify-content-center mt-3">
+                                        <div>
+                                            { this.state.isWished?
+                                                <img src={ require('../../../img/wish_list.png') } onClick={ this.onClickRemoveFromWished } width="35px" height="35px" alt="In Wish List" className="pointer" />
+                                            :
+                                                <img src={ require('../../../img/wish_list_outline.png') } onClick={ this.onClickAddToWished } width="35px" height="35px" alt="Add To Wish List" className="pointer" />
+                                            }
+                                        </div>
+                                        <div className="mx-3">
+                                            { this.state.isWatched ?
+                                                <img src={ require('../../../img/eye.png') } onClick={ this.onClickRemoveFromWatched } width="35px" height="35px" alt="In Already Watched" className="pointer" />
+                                            :
+                                                <img src={ require('../../../img/eye_outline.png') } onClick={ this.onClickAddToWatched } width="35px" height="35px" alt="Add To Already Watched" className="pointer" />
+                                            }
+                                        </div>
+                                        <div>
+                                            <img src={ require('../../../img/watch.png') } width="35px" height="35px" alt="Continue Watching" className="pointer" />
+                                        </div>
+                                    </div>
+                                    <div className="mt-5">
+                                        <div className="d-flex justify-content-center">
+                                            <div>
+                                                <img src={ require('../../../img/rating.png') } width="100px" height="55px" alt="Rating" />
+                                            </div>
+                                            <span className="total-rating">
+                                                { this.state.series[0].rating.toFixed(1) }
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="w-100 ml-5">
-                                    <div className="w-100 d-flex justify-content-between">
+                                <div className="d-flex flex-column w-100 ml-5">
+                                    <div className="w-100 d-flex justify-content-between pb-3">
                                         <div>
                                             <Link to={ `/series/${this.state.series[0].series_id}` } className="series-title">{ this.state.series[0].title }</Link>
                                         </div>
+                                        <div>
+                                            { this.state.isFavourite ?
+                                                <img src={ require('../../../img/star.png') } onClick={ this.onClickRemoveFromFavourites } width="30px" height="30px" alt="In Favourites" className="pointer" />
+                                            :
+                                                <img src={ require('../../../img/star_outline.png') } onClick={ this.onClickAddToFavourites } width="30px" height="30px" alt="Add To Favourites" className="pointer" />
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className="d-flex justify-content-between border-t border-b py-3">
                                         <div className="d-flex">
-                                            <div>
-                                                { this.state.isWished?
-                                                    <img src={ require('../../../img/wish_list.png') } onClick={ this.onClickRemoveFromWished } width="30px" height="30px" alt="In Wish List" className="pointer" />
+                                            <div className="d-flex flex-column text-secondary">
+                                                <span>
+                                                    Country:
+                                                </span>
+                                                <span>
+                                                    Original Language:
+                                                </span>
+                                                <span>
+                                                    English Level:
+                                                </span>
+                                                { this.state.series[0].premiere_date ?
+                                                    <span>
+                                                        Premiere Date:
+                                                    </span>
                                                 :
-                                                    <img src={ require('../../../img/wish_list_outline.png') } onClick={ this.onClickAddToWished } width="30px" height="30px" alt="Add To Wish List" className="pointer" />
+                                                    <span></span>
+                                                }
+                                                <span>
+                                                    Genres:
+                                                </span>
+                                                <span>
+                                                    Age Limit:
+                                                </span>
+                                                { this.state.series[0].opening_theme !== null ?
+                                                    <span>
+                                                        Opening Theme:
+                                                    </span>
+                                                :
+                                                    <span></span>
+                                                }
+                                                { imdbLink ?
+                                                    <span>
+                                                        IMDb:
+                                                    </span>
+                                                :
+                                                    <span></span>
                                                 }
                                             </div>
-                                            <div className="ml-2">
-                                                { this.state.isWatched ?
-                                                    <img src={ require('../../../img/eye.png') } onClick={ this.onClickRemoveFromWatched } width="30px" height="30px" alt="In Already Watched" className="pointer" />
-                                                :
-                                                    <img src={ require('../../../img/eye_outline.png') } onClick={ this.onClickAddToWatched } width="30px" height="30px" alt="Add To Already Watched" className="pointer" />
+                                            <div className="d-flex flex-column ml-5">
+                                                <span>
+                                                    { this.state.series[0].country }
+                                                </span>
+                                                <span>
+                                                    { this.state.series[0].original_language }
+                                                </span>
+                                                <span>
+                                                    { this.state.series[0].english_level }
+                                                </span>
+                                                { this.state.series[0].premiere_date ? 
+                                                    <span>
+                                                        <Moment format="MMMM D, YYYY">
+                                                            { this.state.series[0].premiere_date }
+                                                        </Moment>
+                                                    </span>
+                                                : 
+                                                    <span></span>
                                                 }
-                                            </div>
-                                            <div className="ml-5">
-                                                { this.state.isFavourite ?
-                                                    <img src={ require('../../../img/star.png') } onClick={ this.onClickRemoveFromFavourites } width="30px" height="30px" alt="In Favourites" className="pointer" />
+                                                <div>
+                                                    <Genres seriesId={ this.state.series[0].series_id } />
+                                                </div>
+                                                <span>
+                                                    { this.state.series[0].age_limit }
+                                                </span>
+                                                { this.state.series[0].opening_theme ?
+                                                    <span>
+                                                        { this.state.series[0].opening_theme }
+                                                    </span>
                                                 :
-                                                    <img src={ require('../../../img/star_outline.png') } onClick={ this.onClickAddToFavourites } width="30px" height="30px" alt="Add To Favourites" className="pointer" />
+                                                    <span></span>
+                                                }
+                                                { imdbLink ?
+                                                    <span>
+                                                        <a target="_blanc" href={ imdbLink }>
+                                                            { imdbLink }
+                                                        </a>
+                                                    </span>                                                    
+                                                :
+                                                    <span></span>
                                                 }
                                             </div>
                                         </div>
+                                        <div className="d-flex flex-column justify-content-center w-25 mr-5">
+                                            <CastBlock seriesId={ this.state.series[0].series_id } />
+                                        </div>
                                     </div>
-                                    <hr />
-                                    <span>Rating: { this.state.series[0].rating.toFixed(1) }</span>
-                                    <br />
-                                    <span>Country: { this.state.series[0].country }</span>
-                                    <br />
-                                    <span>Original Language: { this.state.series[0].original_language }</span>
-                                    <br />
-                                    <span>English Level: { this.state.series[0].english_level }</span>
-                                    <br />
-                                    <span>Premiere Date: { (this.state.series[0].premiere_date === null) ? "" : getDate(this.state.series[0].premiere_date) }</span>
-                                    <br />
-                                    <div className="d-flex">
-                                        <div>Genres:</div>
-                                        <Genres seriesId={ this.state.series[0].series_id } />
+                                    <div className="d-flex py-4 border-b">
+                                        <span className="text-secondary">Description:</span>
+                                        <div className="m-0 px-5 ml-5 description">
+                                            { this.state.series[0].description ? 
+                                                this.state.series[0].description 
+                                            : 
+                                                ""
+                                            }
+                                        </div>
                                     </div>
-                                    <span>Age Limit: { this.state.series[0].age_limit }</span>
-                                    <br />
-                                    { (this.state.series[0].opening_theme === null) ?
-                                        <span></span>
-                                    :
-                                        <div>Opening Theme: { this.state.series[0].opening_theme }</div>
-                                    }
-                                    { (imdbLink === "") ?
-                                        <span></span>
-                                    :
-                                        <span>IMDb: <a target="_blanc" href={ imdbLink }>{ imdbLink }</a></span>
-                                    }
-                                    <hr />
-                                    <p className="m-0">Description: { (this.state.series[0].description === null) ? "" : this.state.series[0].description }</p>
-                                    <hr />
-                                    <div className="d-flex justify-content-between">
+                                    <div className="d-flex justify-content-between py-3">
                                         <div className="d-flex">
-                                            <div className="d-flex flex-column justify-content-center rating-span">
+                                            <div className="d-flex flex-column justify-content-center text-secondary rating-span">
                                                 Rate:
                                             </div>
                                             <div className="d-flex flex-column justify-content-center ml-2">

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 import Video from './Video';
 
@@ -12,6 +14,8 @@ import yandexKey from '../../../modules/yandex_key';
 import '../../../styles/key_word.css';
 
 const language = "en-ru";
+const customSwal = withReactContent(Swal);
+let video = null;
 
 class VideoWithKeyWords extends Component { 
 
@@ -28,18 +32,24 @@ class VideoWithKeyWords extends Component {
 
     } 
 
-    handleCueChange = e => {
+    handleCueChange = (e, videoElement) => {
+
+        if (!video) {
+            video = videoElement;
+        }
 
         let words = null;
         if ([...e.target.track.activeCues].map(t => t.text)
             .join(" ")
             .toLowerCase()
+            .replace("--", ' ')
             .replace(/(<.*?>)+/gi, '')
             .match(/[a-z'\-]+/gi) !== null) {
 
             words = [...e.target.track.activeCues].map(t => t.text)
             .join(" ")
             .toLowerCase()
+            .replace("--", ' ')
             .replace(/(<.*?>)+/gi, '')
             .match(/[a-z'\-]+/gi)
             .filter(makeUnique);
@@ -49,14 +59,14 @@ class VideoWithKeyWords extends Component {
         let divKeyWords = document.getElementById("key-words");
         let divBlock = document.createElement('div');
         divBlock.setAttribute('id', "key-words");
-        divBlock.setAttribute('class', "d-flex mb-5");
+        divBlock.setAttribute('class', "d-flex mb-5 justify-content-center");
 
         if (words !== null) {
 
             for(let i = 0; i < words.length; i++) {
 
                 let divMain = document.createElement('div');
-                divMain.setAttribute('class', "container p-2 px-3 border rounded m-1 d-flex justify-content-between key-word");
+                divMain.setAttribute('class', "container p-2 word-border m-1 d-flex justify-content-center key-word");
                 divMain.setAttribute('id', `${words[i]}-container`);
                 divMain.onclick = e => this.onClickWord(e);
                 let divLeft = document.createElement('div');
@@ -82,6 +92,8 @@ class VideoWithKeyWords extends Component {
 
     onClickWord = (e) => {
 
+        video.pause();
+        
         const word = e.target.innerHTML;
 
         axios.get(`https://translate.yandex.net/api/v1.5/tr.json/translate?key=${yandexKey}&lang=${language}&text=${word}`)
@@ -99,6 +111,9 @@ class VideoWithKeyWords extends Component {
             divButton.setAttribute('class', "font-weight-older add-btn mb-2");
             divButton.innerHTML = "+";
             divButton.onclick = e => this.onClickAddWord(e);
+
+            let divMain = document.getElementById(`${word}-container`);
+            divMain.setAttribute('class', `container p-2 pl-4 pr-3 word-border m-1 d-flex justify-content-between key-word`);
 
             divRight.append(divButton);
 
@@ -124,12 +139,20 @@ class VideoWithKeyWords extends Component {
         axios.post(`${serverAddress}key-words/add`, body,
             {withCredentials: true})
         .then(response => {
+
             let divMain = document.getElementById(`${this.state.word}-container`);
-            divMain.setAttribute('class', "container p-2 px-3 border rounded m-1 d-flex justify-content-between bg-secondary key-word");
+            divMain.setAttribute('class', "container p-2 pr-3 pl-4 word-border m-1 d-flex justify-content-between bg-secondary key-word");
+            const divRight = document.getElementById(`${this.state.word}-add-btn`);
+
+            let divButton = divRight.firstChild;
+            divButton.setAttribute("class", "font-weight-older btn-added");
+            divButton.innerHTML = "🗹";
+
             this.setState({
                 allowed: true,
                 errors: []
-            })
+            });
+
         })
         .catch(err => {
             console.log(err);
@@ -141,9 +164,29 @@ class VideoWithKeyWords extends Component {
                 });
             }
             else {
-                this.setState({
-                    errors: err.response.data.errors
-                });
+                if (err.response && err.response.status ===
+                    statusCodes.BAD_REQUEST) {
+
+                    const addedSwal = customSwal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+
+                    })
+
+                    addedSwal.fire({
+                        icon: 'info',
+                        title: 'The word is already in your vocabulary'
+                    })
+
+                }
+                else {
+                    this.setState({
+                        errors: err.response.data.errors
+                    });
+                }
             }
         })
 

@@ -11,3 +11,13 @@
 .rating span {
     float: left;
 }
+
+.total-rating {
+	font-size: 1.5rem;
+	color: #F1C40F;
+	font-weight: 700;
+	text-shadow: 2px 0 0 #BA9A3C;
+	position: relative;
+	top: 20px;
+	left: -15px;
+}

@@ -1,7 +1,7 @@
 .tag {
 	border-radius: 1em 5px 5px 1em;
-	box-shadow: 0 0 3px #5E676E;
-	background-color: #5E676E;
+	box-shadow: 0 0 5px #95A5A6;
+	background-color: #ECF0F1;
 	cursor: pointer;
 }
 
@@ -10,10 +10,11 @@
 }
 
 .tag-text {
-	color: #E7E7E7;
+	color: #000000;
 }
 
 .tag-text:hover {
-	color: #FFFFFF;
+	color: #000000;
+	font-weight: bold;
 	text-decoration: none;
 }

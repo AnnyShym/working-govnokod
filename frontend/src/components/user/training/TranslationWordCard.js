@@ -153,7 +153,7 @@ class TranslationWordCard extends Component {
                                     { this.props.translation }
                                 </div>
                                 <div className="form-group">
-                                    <input type="text" name="answer" placeholder={ this.state.correctAnswer } value={ this.state.userAnswer } onChange= { this.onChangeAnswer } className={ `form-control${inputClass}` } id="exampleFormControlInput1" required />
+                                    <input type="text" name="answer" placeholder={ this.state.correctAnswer } value={ this.state.userAnswer } onChange= { this.onChangeAnswer } className={ `form-control training-form-control${inputClass}` } id="exampleFormControlInput1" required />
                                 </div>
                             </form>
                         </div>

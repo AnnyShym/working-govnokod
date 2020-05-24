@@ -122,7 +122,7 @@ class AwardsPage extends Component {
         return(
 
             <div className="h-100 d-flex flex-column p-5 bg-white">
-                <div className="d-flex p-5 border-bottom award-block">
+                <div className="d-flex p-5 border-b award-block">
                     <div className="w-25 align-self-center clr-purple font-weight-bold">
                         { `Learned Count: ${this.state.learnedCount}` }
                     </div>
@@ -137,7 +137,7 @@ class AwardsPage extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="d-flex p-5 border-bottom award-block">
+                <div className="d-flex p-5 border-b award-block">
                     <div className="w-25 align-self-center clr-orange font-weight-bold">
                         { `Correct Count: ${this.state.correctCount}` }
                     </div>

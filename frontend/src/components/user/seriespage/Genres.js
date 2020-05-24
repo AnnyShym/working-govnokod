@@ -62,23 +62,21 @@ class Genres extends Component {
             return <Redirect to="/signin" />
         }
 
-        if (this.state.genres.length === 0) {
-            return null;
-        }
-
         return(
 
             <div className="d-flex justify-content-start">
-                {
+                { (this.state.genres.length > 0) ?
                     this.state.genres.map((genre) => {
                         return(
 
-                            <Link to={ `/series/genre/${genre.genre_id}` } key={ genre.genre_id } className="lowercase ml-2">
+                            <Link to={ `/series/genre/${genre.genre_id}` } key={ genre.genre_id } className="lowercase mr-2">
                                 { genre.name }
                             </Link>
 
                         )
                     })
+                :
+                    <span>Not Specified</span>
                 }   
             </div>
 

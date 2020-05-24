@@ -105,7 +105,7 @@ class VocabularyPage extends Component {
                                         <td width="25%">{ row.word }</td>
                                         <td width="25%">{ row.translation }</td>
                                         <td width="15%">{ row.progress.replace('_', ' ') }</td>
-                                        <td width="5%"><img src={ require('../../../img/audio.png') } onClick={ () => this.onClickAudio(row.word) } alt="Audio" className="w-50 pointer"/></td>
+                                        <td width="5%"><img src={ require('../../../img/audio.png') } onClick={ () => this.onClickAudio(row.word) } alt="Audio" width="25x" height="25px" className="pointer"/></td>
                                     </tr>
                                 )
                             })

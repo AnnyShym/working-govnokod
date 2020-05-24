@@ -160,7 +160,7 @@ class AudioWordCard extends Component {
                         <div>
                             <form className="d-flex flex-column" method="post" onSubmit={ this.onSubmit }>
                                 <div className="form-group mt-5">
-                                    <input type="text" name="answer" placeholder={ this.state.correctAnswer } value={ this.state.userAnswer } onChange= { this.onChangeAnswer } className={ `form-control${inputClass}` } id="exampleFormControlInput1" required />
+                                    <input type="text" name="answer" placeholder={ this.state.correctAnswer } value={ this.state.userAnswer } onChange= { this.onChangeAnswer } className={ `form-control training-form-control${inputClass}` } id="exampleFormControlInput1" required />
                                 </div>
                             </form>
                         </div>

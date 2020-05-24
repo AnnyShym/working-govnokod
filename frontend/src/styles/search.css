@@ -20,6 +20,10 @@ input {
   border-radius: 20px;
 }
 
+input:focus {
+	outline: none;
+}
+
 .width-32 {
 	width: 32.5%;
 }

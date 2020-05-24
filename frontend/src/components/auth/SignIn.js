@@ -120,21 +120,26 @@ class SignIn extends Component {
                         </div>
                         <form className="d-flex flex-column mb-3" method="post" onSubmit={ this.onSubmit }>
                             <div className="form-group">
-                                <input type="email" name={ this.state.columns[1] } placeholder={ this.state.columnsAlt[1] } value={ this.state.authInfo.login } onChange= { this.onChangeLogin } className="form-control" id="exampleFormControlInput1" required />
+                                <input type="email" name={ this.state.columns[1] } placeholder={ this.state.columnsAlt[1] } value={ this.state.authInfo.login } onChange= { this.onChangeLogin } className="form-control auth-form-control" id="exampleFormControlInput1" required />
                             </div>
                             <div className="form-group">
-                                <input type="password" name={ this.state.columns[2] } placeholder={ this.state.columnsAlt[2] } value={ this.state.authInfo.password } onChange= { this.onChangePassword } className="form-control" id="exampleFormControlInput2" required />
+                                <input type="password" name={ this.state.columns[2] } placeholder={ this.state.columnsAlt[2] } value={ this.state.authInfo.password } onChange= { this.onChangePassword } className="form-control auth-form-control" id="exampleFormControlInput2" required />
                             </div>
                             <div className="form-group">
-                                <select name="role" value={ this.state.role } onChange= { this.onChangeRole } className="form-control" id="exampleFormControlSelect1">
+                                <select name="role" value={ this.state.role } onChange= { this.onChangeRole } className="form-control auth-form-control" id="exampleFormControlSelect1">
                                     <option value={ roles.USER }>{ roles.USER }</option>
                                     <option value={ roles.ADMIN }>{ roles.ADMIN }</option>
                                 </select>
                             </div>
                             <button type="submit" name="Sign In" className="btn btn-dark align-self-center">Sign In</button>
                         </form>
-                        <div>
-                            <p className="m-0">You don't have an account? <Link to="/signup" rel="noopener" className="link">Sign Up</Link></p>
+                        <div className="d-flex justify-content-center">
+                            <div>
+                                You don't have an account?
+                            </div>
+                            <Link to="/signup" rel="noopener" className="ml-1 link">
+                                Sign Up
+                            </Link>
                         </div>
                     </div>
                 </div>
