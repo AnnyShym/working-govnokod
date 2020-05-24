@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import AllSeries from './components/user/allseries/AllSeries';
+import AllArticles from './components/user/articles/AllArticles';
 import SeriesPage from './components/user/seriespage/SeriesPage';
+import ArticlePage from './components/user/articles/ArticlePage';
 import Episode from './components/user/episodes/Episode';
 import PlayGroundPage from './components/user/training/PlayGroundPage';
 import Training from './components/user/training/Training';
@@ -32,13 +34,15 @@ class App extends Component {
             <Router>
                 <Switch>
 
-                    <Route exact path='/' component={ AllSeries }/>
+                    <Route exact path='/' component={ AllArticles }/>
                     <Route exact path='/signup' component={ SignUp }/>
                     <Route exact path='/signin' component={ SignIn }/>
                     <Route exact path='/series/:seriesId/seasons/:seasonNumber/episodes/:episodeNumber' component={ Episode }/>
                     <Route exact path='/series/:criteria/:id' component={ AllSeries }/>
                     <Route exact path='/series/:id' component={ SeriesPage }/>
                     <Route exact path='/series' component={ AllSeries }/>
+                    <Route exact path='/articles/:id' component={ ArticlePage }/>
+                    <Route exact path='/articles' component={ AllArticles }/>
                     <Route exact path='/play-ground' component={ PlayGroundPage }/>
                     <Route exact path='/training/:kind' component={ Training }/>
                     <Route exact path='/account' component={ AccountPage }/>

@@ -6,7 +6,7 @@ class Video extends Component {
 
     componentDidMount() {
 
-        const videoTrack = document.getElementById("video-track");        
+        const videoTrack = document.getElementById("video-track");
 
         videoTrack.oncuechange = e => this.props.onCueChange(e, document.getElementById("video"));
 
@@ -14,9 +14,9 @@ class Video extends Component {
 
     render() {
 
-        const videoAddress = `${serverAddress}videos/${this.props.episode_id}.mp4`;
+        const videoAddress = `${serverAddress}videos/episodes/${this.props.episode_id}.mp4`;
         const subtitlesAddress = `${serverAddress}subtitles/${this.props.episode_id}.vtt`;
-        const posterAddress = `${serverAddress}episodes/${this.props.episode_id}.jpg`;
+        const posterAddress = `${serverAddress}screenshots/${this.props.episode_id}.jpg`;
 
         return(
 

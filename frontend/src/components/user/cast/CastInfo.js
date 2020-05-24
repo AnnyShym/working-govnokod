@@ -31,6 +31,11 @@ class CastInfo extends Component {
             String(this.props.castInfo.imdb_id), IMDB_LENGTH)}`;
         }
 
+        let biography = null;
+        if (this.props.castInfo.biography) {
+            biography = this.props.castInfo.biography.split('\n');
+        }
+
         return(
 
             <div className="d-flex flex-column bg-white">
@@ -89,35 +94,35 @@ class CastInfo extends Component {
                                             { this.props.castInfo.name }
                                         </span>
                                         <span>
-                                            { this.props.castInfo.middle_name ? 
-                                                this.props.castInfo.middle_name 
-                                            : 
-                                                "" 
+                                            { this.props.castInfo.middle_name ?
+                                                this.props.castInfo.middle_name
+                                            :
+                                                ""
                                             }
                                         </span>
                                         <span>
                                             { this.props.castInfo.surname }
                                         </span>
                                         <span>
-                                            { this.props.castInfo.pseudonym ? 
-                                                this.props.castInfo.pseudonym 
-                                            : 
-                                                "" 
+                                            { this.props.castInfo.pseudonym ?
+                                                this.props.castInfo.pseudonym
+                                            :
+                                                ""
                                             }
                                         </span>
                                         <span>
-                                            { this.props.castInfo.country ? 
-                                                this.props.castInfo.country 
-                                            : 
-                                                "" 
+                                            { this.props.castInfo.country ?
+                                                this.props.castInfo.country
+                                            :
+                                                ""
                                             }
                                         </span>
                                         <span>
-                                            { this.props.castInfo.date_of_birth ? 
+                                            { this.props.castInfo.date_of_birth ?
                                                 <Moment format="MMMM DD, YYYY">
                                                     { this.props.castInfo.date_of_birth }
                                                 </Moment>
-                                            : 
+                                            :
                                                 ""
                                             }
                                         </span>
@@ -148,18 +153,21 @@ class CastInfo extends Component {
                             Biography
                         </div>
                     </div>
-                    <div className="d-flex justify-content-center">                        
-                            { this.props.castInfo.biography ?  
-                                <div className="w-75 p-5 shadow biography">  
-                                {             
-                                    this.props.castInfo.biography.split('\n').map((str, index) =>
+                    <div className="d-flex justify-content-center">
+                        { biography ?
+                            <div className="w-75 p-5 shadow biography">
+                            {
+                                biography.map((str, index) =>
+                                    ((index + 1) === biography.length) ?
+                                        <p key={ index } className="mb-0">{ str }</p>
+                                    :
                                         <p key={ index }>{ str }</p>
-                                    )
-                                }
-                                </div>
-                            :
-                                ""
+                                )
                             }
+                            </div>
+                        :
+                            ""
+                        }
                     </div>
                 </div>
             </div>

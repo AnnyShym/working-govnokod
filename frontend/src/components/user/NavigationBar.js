@@ -42,12 +42,13 @@ class NavigationBar extends Component {
 
             <nav className="d-flex justify-content-between navbar navbar-expand-lg navbar-dark bg-dark nav-bar">
                 <div className="d-flex justify-content-start">
-                    <Link className="text-white m-0 p-0 text-decoration-none" to={'/series'}>
+                    <Link className="text-white m-0 p-0 text-decoration-none" to={'/'}>
                         <img src={ require('../../img/film.ico') } alt="logo" width="9%" className="mr-2" />
                         Episodia
                     </Link>
                 </div> 
                 <div className="d-flex">
+                    <Link to={'/series'} className="nav-link btn btn-link text-secondary">Series</Link>
                     <Link to={'/play-ground'} className="nav-link btn btn-link text-secondary">PlayGround</Link>
                     <Link to={'/account'} className="nav-link btn btn-link text-secondary">Account</Link>
                     <Link to="" onClick={ this.onClickLogOut } className="nav-link btn btn-link text-secondary">Log Out</Link>

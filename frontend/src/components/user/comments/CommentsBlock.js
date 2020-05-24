@@ -36,7 +36,7 @@ class CommentsBlock extends Component {
     getComments() {
         axios.get(`${serverAddress}comments/${this.props.about}/${this.props.id}`,
             {withCredentials: true})
-        .then(response => {          
+        .then(response => {
             this.setState({
                 comments: response.data.rows,
                 userId: response.data.userId,
@@ -52,13 +52,13 @@ class CommentsBlock extends Component {
                     allowed: false,
                     errors: err.response.data.errors
                 });
-            } 
+            }
             if (err.response && err.response.status ===
                 statusCodes.INTERNAL_SERVER_ERROR) {
                 this.setState({
                     errors: err.response.data.errors
                 });
-            } 
+            }
         })
     }
 
@@ -102,8 +102,8 @@ class CommentsBlock extends Component {
                 <AddCommentForm about={ this.props.about } id={ this.props.id } />
                 <div className="d-flex justify-content-center">
                     <div className="d-flex flex-column w-50">
-                        { 
-                            this.state.comments.map((comment, index) => 
+                        {
+                            this.state.comments.map((comment, index) =>
                                 <Comment key={ index } comment={ comment } userId={ this.state.userId } />
                             )
                         }

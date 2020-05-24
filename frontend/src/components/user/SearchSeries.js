@@ -35,11 +35,6 @@ class SearchSeries extends Component {
             actors: null,
             creators: null,
             producers: null,
-            tag: null,
-            genre: null,
-            actor: null,
-            creator: null,
-            producer: null,
             expanded: false,
             allowed: true,
             errors: [],
@@ -51,52 +46,52 @@ class SearchSeries extends Component {
 
         if (this.props.criteria !== undefined) {
 
-            let tags = [];
-            let genres = [];
-            let actors = [];
-            let creators = [];
-            let producers = [];
+            // let tags = [];
+            // let genres = [];
+            // let actors = [];
+            // let creators = [];
+            // let producers = [];
 
-            if (this.props.criteria === "tags") {
-                const name = this.props.name.replace(/%20/g, ' ');
-                this.getTag();
-                tags.push({ label: name, value: this.state.tag[0].tag_id });
-            }
+            // if (this.props.criteria === "tags") {
+            //     const name = this.props.name.replace(/%20/g, ' ');
+            //     this.getTag();
+            //     tags.push({ label: name, value: this.state.tag[0].tag_id });
+            // }
 
-            if (this.props.criteria === "genres") {
-                const name = this.props.name.replace(/%20/g, ' ');
-                this.getGenre();
-                genres.push({ label: name, value: this.state.genre[0].genre_id });
-            }
+            // if (this.props.criteria === "genres") {
+            //     const name = this.props.name.replace(/%20/g, ' ');
+            //     this.getGenre();
+            //     genres.push({ label: name, value: this.state.genre[0].genre_id });
+            // }
 
-            if (this.props.criteria === "actors") {
-                const name = this.props.name.replace(/%20/g, ' ');
-                this.getActor();
-                actors.push({ label: name, value: this.state.actor[0].actor_id });
-            }
+            // if (this.props.criteria === "actors") {
+            //     const name = this.props.name.replace(/%20/g, ' ');
+            //     this.getActor();
+            //     actors.push({ label: name, value: this.state.actor[0].actor_id });
+            // }
 
-            if (this.props.criteria === "creators") {
-                const name = this.props.name.replace(/%20/g, ' ');
-                this.getCreator();
-                creators.push({ label: name, value: this.state.creator[0].creator_id });
-            }
+            // if (this.props.criteria === "creators") {
+            //     const name = this.props.name.replace(/%20/g, ' ');
+            //     this.getCreator();
+            //     creators.push({ label: name, value: this.state.creator[0].creator_id });
+            // }
 
-            if (this.props.criteria === "producers") {
-                const name = this.props.name.replace(/%20/g, ' ');
-                this.getProducer();
-                producers.push({ label: name, value: this.state.producer[0].producer_id });
-            }
+            // if (this.props.criteria === "producers") {
+            //     const name = this.props.name.replace(/%20/g, ' ');
+            //     this.getProducer();
+            //     producers.push({ label: name, value: this.state.producer[0].producer_id });
+            // }
 
-            this.setState({
-                criteria: {
-                    ...this.state.criteria,
-                    tags: tags,
-                    genres: genres,
-                    actors: actors,
-                    creators: creators,
-                    producers: producers
-                }
-            });
+            // this.setState({
+            //     criteria: {
+            //         ...this.state.criteria,
+            //         tags: tags,
+            //         genres: genres,
+            //         actors: actors,
+            //         creators: creators,
+            //         producers: producers
+            //     }
+            // });
 
         }
 
@@ -343,141 +338,6 @@ class SearchSeries extends Component {
         .then(response => {
             this.setState({
                 producers: response.data.rows,
-                allowed: true,
-                errors: []
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            if (err.response && err.response.status ===
-                statusCodes.UNAUTHORIZED) {
-                this.setState({
-                    allowed: false,
-                    errors: err.response.data.errors
-                });
-            }
-            else {
-                this.setState({
-                    errors: err.response.data.errors
-                });              
-            }
-        })
-    }
-
-    getTag = () => {
-        axios.get(`${serverAddress}tag/${this.props.name}`,
-            {withCredentials: true})
-        .then(response => {
-            this.setState({
-                tag: response.data.rows,
-                allowed: true,
-                errors: []
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            if (err.response && err.response.status ===
-                statusCodes.UNAUTHORIZED) {
-                this.setState({
-                    allowed: false,
-                    errors: err.response.data.errors
-                });
-            }
-            else {
-                this.setState({
-                    errors: err.response.data.errors
-                });              
-            }
-        })
-    }
-
-    getGenre = () => {
-        axios.get(`${serverAddress}genre/${this.props.name}`,
-            {withCredentials: true})
-        .then(response => {
-            this.setState({
-                genre: response.data.rows,
-                allowed: true,
-                errors: []
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            if (err.response && err.response.status ===
-                statusCodes.UNAUTHORIZED) {
-                this.setState({
-                    allowed: false,
-                    errors: err.response.data.errors
-                });
-            }
-            else {
-                this.setState({
-                    errors: err.response.data.errors
-                });              
-            }
-        })
-    }
-
-    getActor = () => {
-        axios.get(`${serverAddress}actor/${this.props.name}`,
-            {withCredentials: true})
-        .then(response => {
-            this.setState({
-                actor: response.data.rows,
-                allowed: true,
-                errors: []
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            if (err.response && err.response.status ===
-                statusCodes.UNAUTHORIZED) {
-                this.setState({
-                    allowed: false,
-                    errors: err.response.data.errors
-                });
-            }
-            else {
-                this.setState({
-                    errors: err.response.data.errors
-                });              
-            }
-        })
-    }
-
-    getCreator = () => {
-        axios.get(`${serverAddress}creator/${this.props.name}`,
-            {withCredentials: true})
-        .then(response => {
-            this.setState({
-                creator: response.data.rows,
-                allowed: true,
-                errors: []
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            if (err.response && err.response.status ===
-                statusCodes.UNAUTHORIZED) {
-                this.setState({
-                    allowed: false,
-                    errors: err.response.data.errors
-                });
-            }
-            else {
-                this.setState({
-                    errors: err.response.data.errors
-                });              
-            }
-        })
-    }
-
-    getProducer = () => {
-        axios.get(`${serverAddress}producer/${this.props.name}`,
-            {withCredentials: true})
-        .then(response => {
-            this.setState({
-                producer: response.data.rows,
                 allowed: true,
                 errors: []
             })
@@ -831,52 +691,52 @@ class SearchSeries extends Component {
                                         <div className="d-flex flex-column w-75">
                                             <div className="d-flex justify-content-between w-100">
                                                 <div className="form-group d-flex flex-column width-66">
-                                                    <label htmlFor="exampleFormControlSelect1">Country:</label> 
+                                                    <label>Country:</label> 
                                                     <Select options={ countryOptions } value={ this.state.criteria.country } onChange={ this.onChangeCountry } placeholder="" styles={ styles } theme={ themeConfig } />
                                                 </div>
                                                 <div className="form-group d-flex flex-column width-32">
-                                                    <label htmlFor="exampleFormControlSelect9">Filter By:</label> 
+                                                    <label>Filter By:</label> 
                                                     <Select options={ filterOptions } value={ this.state.criteria.filter } onChange={ this.onChangeFilter } placeholder="" theme={ themeConfig } />
                                                 </div>
                                             </div>
                                             <div className="d-flex justify-content-between w-100">
                                                 <div className="form-group d-flex flex-column width-74">
-                                                    <label htmlFor="exampleFormControlSelect2">English Level:</label>
+                                                    <label>English Level:</label>
                                                     <Select options={ levelOptions } value={ this.state.criteria.englishLevel } onChange={ this.onChangeEnglishLevel } placeholder="" styles={ styles } theme={ themeConfig } />
                                                 </div>
                                                 <div className="form-group d-flex flex-column width-24">
-                                                    <label htmlFor="exampleFormControlSelect3">Age Limit:</label>
+                                                    <label>Age Limit:</label>
                                                     <Select options={ limitOptions } value={ this.state.criteria.ageLimit } onChange={ this.onChangeAgeLimit } placeholder="" styles={ styles } theme={ themeConfig } />
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="form-group d-flex flex-column justify-content-center w-25">
+                                        <div className="form-group d-flex flex-column justify-content-center w-25 mb-0">
                                             <div onClick={ this.onSubmit } className="d-flex justify-content-center">
-                                                <img src={ require("../../img/search.png") } width="30%" alt="Search" className="mt-4 ml-3 pointer" />
+                                                <img src={ require("../../img/search.png") } width="30%" alt="Search" className="pointer" />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="d-flex justify-content-between">
                                         <div className="form-group d-flex flex-column width-49">
-                                            <label htmlFor="exampleFormControlSelect4">Genres:</label>
+                                            <label>Genres:</label>
                                             <Select isMulti options={ genreOptions } value={ this.state.criteria.genres } onChange={ this.onChangeGenres } placeholder="" theme={ themeConfig } />
                                         </div>
                                         <div className="form-group d-flex flex-column width-49">
-                                            <label htmlFor="exampleFormControlSelect5">Tags:</label>
+                                            <label>Tags:</label>
                                             <Select isMulti options={ tagOptions } value={ this.state.criteria.tags } onChange={ this.onChangeTags } placeholder="" theme={ themeConfig } />
                                         </div>
                                     </div>
                                     <div className="d-flex justify-content-between">
                                         <div className="form-group d-flex flex-column width-32">
-                                            <label htmlFor="exampleFormControlSelect6">Actors:</label>
+                                            <label>Actors:</label>
                                             <Select isMulti options={ actorOptions } value={ this.state.criteria.actors } onChange={ this.onChangeActors } placeholder="" theme={ themeConfig } />
                                         </div>
                                         <div className="form-group d-flex flex-column width-32">
-                                            <label htmlFor="exampleFormControlSelect7">Creators:</label>
+                                            <label>Creators:</label>
                                             <Select isMulti options={ creatorOptions } value={ this.state.criteria.creators } onChange={ this.onChangeCreators } placeholder="" theme={ themeConfig } />
                                         </div>
                                         <div className="form-group d-flex flex-column width-32">
-                                            <label htmlFor="exampleFormControlSelect8">Producers:</label>
+                                            <label>Producers:</label>
                                             <Select isMulti options={ producerOptions } value={ this.state.criteria.producers } onChange={ this.onChangeProducers } placeholder="" theme={ themeConfig } />
                                         </div>
                                     </div>

@@ -99,7 +99,7 @@ class SignIn extends Component {
                 return <Redirect from="/signin" to="/tables" />
             }
             else {
-                return <Redirect from="/signin" to="/series" />
+                return <Redirect from="/signin" to="/" />
             }
         }
         else {

@@ -83,14 +83,12 @@ class SeriesCard extends Component {
                         </div>
                         <div className="d-flex pt-3">                            
                             <p className="m-0">
-                                <div>
-                                    <span className="text-secondary">Description:</span>
-                                    { this.props.series.description ? 
-                                        ` ${this.props.series.description.substring(0, CROP_VALUE)}...`
-                                    :
-                                        ""
-                                    }
-                                </div>
+                                <span className="text-secondary">Description:</span>
+                                { this.props.series.description ? 
+                                    ` ${this.props.series.description.substring(0, CROP_VALUE)}...`
+                                :
+                                    ""
+                                }
                             </p>
                         </div>
                     </div>

@@ -32,7 +32,7 @@ class SeasonInfo extends Component {
         if (this.props.episodes) {
             episodeBlocks = this.props.episodes.map((episode, index) =>
                 <div className="card w-25 m-5 shadow" key={ index }>
-                    <img src={ `${serverAddress}episodes/small/${episode.episode_id}.jpg` } alt="Episode Cover" className="card-img-top" />
+                    <img src={ `${serverAddress}screenshots/small/${episode.episode_id}.jpg` } alt="Episode Cover" className="card-img-top" />
                     <div className="card-body">
                         <h5 className="card-title">
                             Episode { episode.serial_number }
@@ -50,7 +50,7 @@ class SeasonInfo extends Component {
                             this.props.season.serial_number}/episodes/${
                             episode.serial_number}` } className="card-link">
                             Watch
-                        </Link>                            
+                        </Link>
                     </div>
                 </div>
             );
@@ -67,15 +67,15 @@ class SeasonInfo extends Component {
                     :
                         <div></div>
                     }
-                    <div className="d-flex justify-content-center">                        
-                        { description ?  
-                            <div className="w-75 p-5 mb-5 shadow description">  
-                            {             
+                    <div className="d-flex justify-content-center">
+                        { description ?
+                            <div className="w-75 p-5 mb-5 shadow description">
+                            {
                                 description.map((str, index) =>
-                                    (index === description.length) ?
-                                        <p key={ index }>{ str }</p>
-                                    :
+                                    ((index + 1) === description.length) ?
                                         <p key={ index } className="mb-0">{ str }</p>
+                                    :
+                                        <p key={ index }>{ str }</p>
                                 )
                             }
                             </div>
@@ -92,7 +92,7 @@ class SeasonInfo extends Component {
         )
 
     }
-    
+
 }
 
 export default SeasonInfo;

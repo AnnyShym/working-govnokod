@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import NavigationBar from '../NavigationBar';
 import SearchSeries from '../SearchSeries';
-import SeriesBlock from './SeriesBlock';
+import SeriesCard from './SeriesCard';
 
 import serverAddress from '../../../modules/server';
 import statusCodes from '../../../modules/status_codes';
@@ -124,8 +124,12 @@ class AllSeries extends Component {
                                 </div>
                             :
                                 <div className="p-relative">
-                                    <div>
-                                        <SeriesBlock series={ this.state.series } />
+                                    <div className="container series-block">
+                                        {
+                                            this.state.series.map((series) =>
+                                                <SeriesCard key={ series.series_id } series={ series } />
+                                            )
+                                        }
                                     </div>
                                     <div className="d-flex justify-content-between p-3">
                                         <button onClick={ () => this.loadSeries("previous") } className="btn btn-dark">Previous</button>

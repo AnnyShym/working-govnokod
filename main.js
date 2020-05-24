@@ -425,7 +425,7 @@ app.get('/creators', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            select('creator_id, name, middle_name, surname, pseudonym', 'creators', ``, 
+            select('creator_id, name, middle_name, surname, pseudonym', 'creators', ``,
                 'ORDER BY name, middle_name, surname, pseudonym ASC',
                 function (err, statusCode, msg, rows) {
                 if (err) {
@@ -447,7 +447,7 @@ app.get('/actors', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            select('actor_id, name, middle_name, surname, pseudonym', 'actors', ``, 
+            select('actor_id, name, middle_name, surname, pseudonym', 'actors', ``,
                 'ORDER BY name, middle_name, surname, pseudonym ASC',
                 function (err, statusCode, msg, rows) {
                 if (err) {
@@ -469,7 +469,7 @@ app.get('/producers', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            select('producer_id, name, middle_name, surname, pseudonym', 'producers', ``, 
+            select('producer_id, name, middle_name, surname, pseudonym', 'producers', ``,
                 'ORDER BY name, middle_name, surname, pseudonym ASC',
                 function (err, statusCode, msg, rows) {
                 if (err) {
@@ -492,10 +492,10 @@ app.get('/series/:seriesId/seasons/:seasonNumber/count', function(req, res) {
         }
         else {
 
-            const sql = `SELECT COUNT(*) AS total_count 
-                FROM episodes 
-                INNER JOIN seasons ON episodes.season_id = seasons.season_id 
-                WHERE seasons.series_id = ${req.params.seriesId} AND 
+            const sql = `SELECT COUNT(*) AS total_count
+                FROM episodes
+                INNER JOIN seasons ON episodes.season_id = seasons.season_id
+                WHERE seasons.series_id = ${req.params.seriesId} AND
                       seasons.serial_number = ${req.params.seasonNumber};`;
 
             db.query(sql, (err, rows) => {
@@ -522,10 +522,10 @@ app.get('/series/:seriesId/seasons/:seasonNumber/episodes/:episodeNumber', funct
         else {
 
             const sql = `SELECT episode_id, episodes.title, episodes.premiere_date, episodes.description
-                FROM episodes 
-                INNER JOIN seasons ON episodes.season_id = seasons.season_id 
-                WHERE seasons.series_id = ${req.params.seriesId} AND 
-                      seasons.serial_number = ${req.params.seasonNumber} AND 
+                FROM episodes
+                INNER JOIN seasons ON episodes.season_id = seasons.season_id
+                WHERE seasons.series_id = ${req.params.seriesId} AND
+                      seasons.serial_number = ${req.params.seasonNumber} AND
                       episodes.serial_number = ${req.params.episodeNumber};`;
 
             db.query(sql, (err, rows) => {
@@ -574,14 +574,14 @@ app.get('/series/:id', function(req, res) {
         }
         else {
 
-            const sql = `SELECT series.series_id, title, countries.name AS country, rating, 
-                languages.name AS original_language, english_level, age_limit, 
-                opening_theme, imdb_id, premiere_date, description 
-                FROM series 
-                INNER JOIN countries ON series.country_id = countries.country_id 
-                INNER JOIN languages ON series.original_language_id = languages.language_id 
-                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
-                INNER JOIN age_limits ON series.age_limit_id = age_limits.age_limit_id 
+            const sql = `SELECT series.series_id, title, countries.name AS country, rating,
+                languages.name AS original_language, english_level, age_limit,
+                opening_theme, imdb_id, premiere_date, description
+                FROM series
+                INNER JOIN countries ON series.country_id = countries.country_id
+                INNER JOIN languages ON series.original_language_id = languages.language_id
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id
+                INNER JOIN age_limits ON series.age_limit_id = age_limits.age_limit_id
                 WHERE series_id = ${req.params.id};`;
 
             db.query(sql, (err, rows) => {
@@ -606,7 +606,7 @@ app.get('/season/:id/episodes', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            select('episode_id, serial_number, title', 'episodes', 
+            select('episode_id, serial_number, title', 'episodes',
                 `WHERE season_id = ${req.params.id}`,
                 'ORDER BY serial_number ASC',
                  function (err, statusCode, msg, rows) {
@@ -671,7 +671,7 @@ app.post('/key-words/progress', function(req, res) {
     const userCookieJwt = req.cookies.user_auth;
     jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
         if (!err) {
-            updateRow('key_words_for_users', 'progress = "LEARNED"', 
+            updateRow('key_words_for_users', 'progress = "LEARNED"',
                 `key_word_id = ${req.body.key_word_id} AND user_id = ${decoded.id}`, function (err, statusCode,
                 msg) {
                 if (err) {
@@ -694,7 +694,7 @@ app.get('/vocabulary', function(req, res) {
         }
         else {
             selectAllForIntermediateTable('key_words_for_users', 'users', 'key_words',
-                'key_words.key_word_id, word, translation', 'user_id', 'key_word_id', 'user_id', 'key_word_id', 
+                'key_words.key_word_id, word, translation', 'user_id', 'key_word_id', 'user_id', 'key_word_id',
                 `WHERE users.user_id = ${decoded.id} AND progress = "ON_STUDY"`, '',
                 function (err, statusCode, msg, rows) {
                 if (err) {
@@ -717,7 +717,7 @@ app.get('/all-vocabulary', function(req, res) {
         }
         else {
             selectAllForIntermediateTable('key_words_for_users', 'users', 'key_words',
-                'key_words.key_word_id, word, translation, progress', 'user_id', 'key_word_id', 'user_id', 'key_word_id', 
+                'key_words.key_word_id, word, translation, progress', 'user_id', 'key_word_id', 'user_id', 'key_word_id',
                 `WHERE users.user_id = ${decoded.id}`, 'ORDER BY progress DESC, word ASC',
                 function (err, statusCode, msg, rows) {
                 if (err) {
@@ -735,7 +735,7 @@ app.post('/save-progress', function(req, res) {
     const userCookieJwt = req.cookies.user_auth;
     jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
         updateRow('users',`learned_count = ${req.body.learnedCount
-            }, trained_count = ${req.body.totalCount}, correct_count = ${req.body.correctCount}`, 
+            }, trained_count = ${req.body.totalCount}, correct_count = ${req.body.correctCount}`,
             `user_id = ${decoded.id}`,
             function (err, statusCode, msg) {
             if (err) {
@@ -800,7 +800,7 @@ app.post('/favourites', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            insertRow('favourite_series', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`, 
+            insertRow('favourite_series', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`,
                 function (err, statusCode, msg) {
                 if (err) {
                     res.status(statusCode).json({errors: [{msg: msg}]});
@@ -821,7 +821,7 @@ app.delete('/favourites/:id', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            deleteRow('favourite_series', `user_id = ${decoded.id} AND series_id = ${req.params.id}`, 
+            deleteRow('favourite_series', `user_id = ${decoded.id} AND series_id = ${req.params.id}`,
                 function (err, statusCode, msg) {
                 if (err) {
                     res.status(statusCode).json({errors: [{msg: msg}]});
@@ -843,16 +843,16 @@ app.get('/favourites/:page/:perPage', function(req, res) {
         }
         else {
 
-            const sql = `SELECT series.series_id, title, countries.name AS country, rating, 
-                languages.name AS original_language, english_levels.english_level, 
-                premiere_date, description 
-                FROM favourite_series 
-                INNER JOIN series ON favourite_series.series_id = series.series_id 
-                INNER JOIN countries ON series.country_id = countries.country_id 
-                INNER JOIN languages ON series.original_language_id = languages.language_id 
-                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
-                WHERE user_id = ${decoded.id} 
-                ORDER BY title ASC 
+            const sql = `SELECT series.series_id, title, countries.name AS country, rating,
+                languages.name AS original_language, english_levels.english_level,
+                premiere_date, description
+                FROM favourite_series
+                INNER JOIN series ON favourite_series.series_id = series.series_id
+                INNER JOIN countries ON series.country_id = countries.country_id
+                INNER JOIN languages ON series.original_language_id = languages.language_id
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id
+                WHERE user_id = ${decoded.id}
+                ORDER BY title ASC
                 LIMIT ${req.params.page * req.params.perPage}, ${req.params.perPage};`;
 
             db.query(sql, (err, rows) => {
@@ -898,7 +898,7 @@ app.post('/already-watched', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            insertRow('already_watched_series', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`, 
+            insertRow('already_watched_series', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`,
                 function (err, statusCode, msg) {
                 if (err) {
                     res.status(statusCode).json({errors: [{msg: msg}]});
@@ -919,7 +919,7 @@ app.delete('/already-watched/:id', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            deleteRow('already_watched_series', `user_id = ${decoded.id} AND series_id = ${req.params.id}`, 
+            deleteRow('already_watched_series', `user_id = ${decoded.id} AND series_id = ${req.params.id}`,
                 function (err, statusCode, msg) {
                 if (err) {
                     res.status(statusCode).json({errors: [{msg: msg}]});
@@ -941,16 +941,16 @@ app.get('/already-watched/:page/:perPage', function(req, res) {
         }
         else {
 
-            const sql = `SELECT series.series_id, title, countries.name AS country, rating, 
-                languages.name AS original_language, english_levels.english_level, 
-                premiere_date, description 
+            const sql = `SELECT series.series_id, title, countries.name AS country, rating,
+                languages.name AS original_language, english_levels.english_level,
+                premiere_date, description
                 FROM already_watched_series
-                INNER JOIN series ON already_watched_series.series_id = series.series_id 
-                INNER JOIN countries ON series.country_id = countries.country_id 
-                INNER JOIN languages ON series.original_language_id = languages.language_id 
-                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
-                WHERE user_id = ${decoded.id} 
-                ORDER BY title ASC 
+                INNER JOIN series ON already_watched_series.series_id = series.series_id
+                INNER JOIN countries ON series.country_id = countries.country_id
+                INNER JOIN languages ON series.original_language_id = languages.language_id
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id
+                WHERE user_id = ${decoded.id}
+                ORDER BY title ASC
                 LIMIT ${req.params.page * req.params.perPage}, ${req.params.perPage};`;
 
             db.query(sql, (err, rows) => {
@@ -996,7 +996,7 @@ app.post('/wish-list', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            insertRow('series_in_wish_list', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`, 
+            insertRow('series_in_wish_list', `user_id = ${decoded.id}, series_id = ${req.body.seriesId}`,
                 function (err, statusCode, msg) {
                 if (err) {
                     res.status(statusCode).json({errors: [{msg: msg}]});
@@ -1017,7 +1017,7 @@ app.delete('/wish-list/:id', function(req, res) {
                 {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
         }
         else {
-            deleteRow('series_in_wish_list', `user_id = ${decoded.id} AND series_id = ${req.params.id}`, 
+            deleteRow('series_in_wish_list', `user_id = ${decoded.id} AND series_id = ${req.params.id}`,
                 function (err, statusCode, msg) {
                 if (err) {
                     res.status(statusCode).json({errors: [{msg: msg}]});
@@ -1039,16 +1039,16 @@ app.get('/wish-list/:page/:perPage', function(req, res) {
         }
         else {
 
-            const sql = `SELECT series.series_id, title, countries.name AS country, rating, 
-                languages.name AS original_language, english_levels.english_level, 
-                premiere_date, description 
+            const sql = `SELECT series.series_id, title, countries.name AS country, rating,
+                languages.name AS original_language, english_levels.english_level,
+                premiere_date, description
                 FROM series_in_wish_list
-                INNER JOIN series ON series_in_wish_list.series_id = series.series_id 
-                INNER JOIN countries ON series.country_id = countries.country_id 
-                INNER JOIN languages ON series.original_language_id = languages.language_id 
-                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
-                WHERE user_id = ${decoded.id} 
-                ORDER BY title ASC 
+                INNER JOIN series ON series_in_wish_list.series_id = series.series_id
+                INNER JOIN countries ON series.country_id = countries.country_id
+                INNER JOIN languages ON series.original_language_id = languages.language_id
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id
+                WHERE user_id = ${decoded.id}
+                ORDER BY title ASC
                 LIMIT ${req.params.page * req.params.perPage}, ${req.params.perPage};`;
 
             db.query(sql, (err, rows) => {
@@ -1074,9 +1074,9 @@ app.get('/series/:seriesId/tags', function(req, res) {
         }
         else {
 
-            const sql = `SELECT tags.tag_id, name 
-                FROM tags_for_series 
-                INNER JOIN tags ON tags_for_series.tag_id = tags.tag_id 
+            const sql = `SELECT tags.tag_id, name
+                FROM tags_for_series
+                INNER JOIN tags ON tags_for_series.tag_id = tags.tag_id
                 WHERE series_id = ${req.params.seriesId}
                 ORDER BY name ASC;`;
 
@@ -1103,9 +1103,9 @@ app.get('/series/:seriesId/genres', function(req, res) {
         }
         else {
 
-            const sql = `SELECT genres.genre_id, name 
-                FROM genres_for_series 
-                INNER JOIN genres ON genres_for_series.genre_id = genres.genre_id 
+            const sql = `SELECT genres.genre_id, name
+                FROM genres_for_series
+                INNER JOIN genres ON genres_for_series.genre_id = genres.genre_id
                 WHERE series_id = ${req.params.seriesId}
                 ORDER BY name ASC;`;
 
@@ -1123,7 +1123,7 @@ app.get('/series/:seriesId/genres', function(req, res) {
     });
 });
 
-app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds/:actorIds/:creatorIds/:producerIds/:orderBy/:direction/:page/:perPage', 
+app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds/:actorIds/:creatorIds/:producerIds/:orderBy/:direction/:page/:perPage',
     function(req, res) {
     const userCookieJwt = req.cookies.user_auth;
     jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
@@ -1153,13 +1153,13 @@ app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds
             if (req.params.ageLimitId !== " ") {
                 whereCriteria.push(`age_limits.age_limit_id = ${req.params.ageLimitId}`);
             }
-            
+
             if (req.params.tagIds !== " ") {
                 const criteria = joinArrayIntoQuery(req.params.tagIds.split('&'), "tag_id");
                 whereCriteria.push(criteria.str);
                 count *= criteria.count;
                 havingColumn = "tag_id";
-                joinCriteria.push("INNER JOIN tags_for_series ON series.series_id = tags_for_series.series_id");           
+                joinCriteria.push("INNER JOIN tags_for_series ON series.series_id = tags_for_series.series_id");
             }
 
             if (req.params.genreIds !== " ") {
@@ -1167,7 +1167,7 @@ app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds
                 whereCriteria.push(criteria.str);
                 count *= criteria.count;
                 havingColumn = "genre_id";
-                joinCriteria.push("INNER JOIN genres_for_series ON series.series_id = genres_for_series.series_id");           
+                joinCriteria.push("INNER JOIN genres_for_series ON series.series_id = genres_for_series.series_id");
             }
 
             if (req.params.actorIds !== " ") {
@@ -1175,7 +1175,7 @@ app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds
                 whereCriteria.push(criteria.str);
                 count *= criteria.count;
                 havingColumn = "actor_id";
-                joinCriteria.push("INNER JOIN actors_in_series ON series.series_id = actors_in_series.series_id");           
+                joinCriteria.push("INNER JOIN actors_in_series ON series.series_id = actors_in_series.series_id");
             }
 
             if (req.params.creatorIds !== " ") {
@@ -1183,7 +1183,7 @@ app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds
                 whereCriteria.push(criteria.str);
                 count *= criteria.count;
                 havingColumn = "creator_id";
-                joinCriteria.push("INNER JOIN creators_in_series ON series.series_id = creators_in_series.series_id");           
+                joinCriteria.push("INNER JOIN creators_in_series ON series.series_id = creators_in_series.series_id");
             }
 
             if (req.params.producerIds !== " ") {
@@ -1191,7 +1191,7 @@ app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds
                 whereCriteria.push(criteria.str);
                 count *= criteria.count;
                 havingColumn = "producer_id";
-                joinCriteria.push("INNER JOIN producers_in_series ON series.series_id = producers_in_series.series_id");           
+                joinCriteria.push("INNER JOIN producers_in_series ON series.series_id = producers_in_series.series_id");
             }
 
             let joins = joinCriteria.join(" ");
@@ -1206,7 +1206,7 @@ app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds
 
             let groupBy = "";
             if (havingColumn) {
-                groupBy = `GROUP BY series.series_id 
+                groupBy = `GROUP BY series.series_id
                     HAVING COUNT(${havingColumn}) = ${count} `;
             }
 
@@ -1215,14 +1215,14 @@ app.get('/series/:title/:englishLevelId/:countryId/:ageLimitId/:tagIds/:genreIds
                 orderByTitle = ", title ASC ";
             }
 
-            const sql = `SELECT DISTINCT series.series_id, title, countries.name AS country, 
-                premiere_date, languages.name AS original_language, 
-                english_levels.english_level, description, rating 
-                FROM series 
-                INNER JOIN countries ON series.country_id = countries.country_id 
-                INNER JOIN languages ON series.original_language_id = languages.language_id 
-                INNER JOIN age_limits ON series.age_limit_id = age_limits.age_limit_id 
-                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id 
+            const sql = `SELECT DISTINCT series.series_id, title, countries.name AS country,
+                premiere_date, languages.name AS original_language,
+                english_levels.english_level, description, rating
+                FROM series
+                INNER JOIN countries ON series.country_id = countries.country_id
+                INNER JOIN languages ON series.original_language_id = languages.language_id
+                INNER JOIN age_limits ON series.age_limit_id = age_limits.age_limit_id
+                INNER JOIN english_levels ON series.english_level_id = english_levels.english_level_id
                 ${joins}
                 ${where}
                 ${groupBy}
@@ -1252,9 +1252,9 @@ app.get('/comments/:about/:id', function(req, res) {
         }
         else {
 
-            const sql = `SELECT users.user_id, nickname, datetime, content 
-                FROM comments_about_${req.params.about.toLowerCase()} 
-                INNER JOIN users ON comments_about_${req.params.about.toLowerCase()}.user_id = users.user_id 
+            const sql = `SELECT users.user_id, nickname, datetime, content
+                FROM comments_about_${req.params.about.toLowerCase()}
+                INNER JOIN users ON comments_about_${req.params.about.toLowerCase()}.user_id = users.user_id
                 WHERE ${req.params.about.slice(0, -1)}_id = ${req.params.id}
                 ORDER BY datetime DESC;`;
 
@@ -1281,10 +1281,10 @@ app.get('/reviews/:seriesId', function(req, res) {
         }
         else {
 
-            const sql = `SELECT users.user_id, nickname, datetime, content 
-                FROM reviews 
-                INNER JOIN users ON reviews.user_id = users.user_id 
-                WHERE series_id = ${req.params.seriesId} 
+            const sql = `SELECT users.user_id, nickname, datetime, content
+                FROM reviews
+                INNER JOIN users ON reviews.user_id = users.user_id
+                WHERE series_id = ${req.params.seriesId}
                 ORDER BY datetime DESC;`;
 
             db.query(sql, (err, rows) => {
@@ -1310,8 +1310,8 @@ app.get('/series/:seriesId/actors', function(req, res) {
         }
         else {
 
-            const sql = `SELECT actor_id 
-                FROM actors_in_series 
+            const sql = `SELECT actor_id
+                FROM actors_in_series
                 WHERE series_id = ${req.params.seriesId}
                 ORDER BY actor_id ASC;`;
 
@@ -1338,8 +1338,8 @@ app.get('/series/:seriesId/creators', function(req, res) {
         }
         else {
 
-            const sql = `SELECT creator_id 
-                FROM creators_in_series 
+            const sql = `SELECT creator_id
+                FROM creators_in_series
                 WHERE series_id = ${req.params.seriesId}
                 ORDER BY creator_id ASC;`;
 
@@ -1366,8 +1366,8 @@ app.get('/series/:seriesId/producers', function(req, res) {
         }
         else {
 
-            const sql = `SELECT producer_id 
-                FROM producers_in_series 
+            const sql = `SELECT producer_id
+                FROM producers_in_series
                 WHERE series_id = ${req.params.seriesId}
                 ORDER BY producer_id ASC;`;
 
@@ -1394,8 +1394,8 @@ app.get('/cast/:cast/:castId/series', function(req, res) {
         }
         else {
 
-            const sql = `SELECT series_id 
-                FROM ${req.params.cast}_in_series 
+            const sql = `SELECT series_id
+                FROM ${req.params.cast}_in_series
                 WHERE ${req.params.cast.slice(0, -1)}_id = ${req.params.castId}
                 ORDER BY series_id ASC;`;
 
@@ -1424,11 +1424,158 @@ app.get('/cast/:cast/:id', function(req, res) {
 
             const table = req.params.cast.toLowerCase();
 
-            const sql = `SELECT ${table}.name, middle_name, surname, pseudonym, 
-                countries.name AS country, date_of_birth, biography, imdb_id 
-                FROM ${table} 
-                LEFT OUTER JOIN countries ON ${table}.country_id = countries.country_id 
+            const sql = `SELECT ${table}.name, middle_name, surname, pseudonym,
+                countries.name AS country, date_of_birth, biography, imdb_id
+                FROM ${table}
+                LEFT OUTER JOIN countries ON ${table}.country_id = countries.country_id
                 WHERE ${table.slice(0, -1)}_id = ${req.params.id}`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/series', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+            select('series_id, title', 'series', ``, 'ORDER BY title ASC',
+                function (err, statusCode, msg, rows) {
+                if (err) {
+                    res.status(statusCode).json({errors: [{msg: msg}]});
+                }
+                else {
+                    res.status(statusCode).json({rows: rows});
+                }
+            });
+        }
+    });
+});
+
+app.get('/articles/:title/:seriesIds/:orderBy/:direction/:page/:perPage',
+    function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            let whereCriteria = [];
+            let joinCriteria = [];
+            let count = 1;
+            let havingColumn = null;
+
+            if (req.params.title !== " ") {
+                whereCriteria.push(`title LIKE "%${req.params.title}%"`);
+            }
+
+            if (req.params.seriesIds !== " ") {
+                const criteria = joinArrayIntoQuery(req.params.seriesIds.split('&'), "series_id");
+                whereCriteria.push(criteria.str);
+                count *= criteria.count;
+                havingColumn = "series_id";
+                joinCriteria.push("INNER JOIN series_in_articles ON articles.article_id = series_in_articles.article_id");
+            }
+
+            let joins = joinCriteria.join(" ");
+            if (joinCriteria.length > 0) {
+                joins = `${joins} `;
+            }
+
+            let where = whereCriteria.join(" AND ");
+            if (whereCriteria.length > 0) {
+                where = `WHERE ${where} `;
+            }
+
+            let groupBy = "";
+            if (havingColumn) {
+                groupBy = `GROUP BY articles.article_id
+                    HAVING COUNT(${havingColumn}) = ${count} `;
+            }
+
+            let orderByTitle = " ";
+            if (req.params.orderBy !== "title") {
+                orderByTitle = ", title ASC ";
+            }
+
+            const sql = `SELECT DISTINCT articles.article_id, title, content, publication_date
+                FROM articles
+                ${joins}
+                ${where}
+                ${groupBy}
+                ORDER BY articles.${ req.params.orderBy.replace(/-/g, '_') } ${ req.params.direction.toUpperCase() }${ orderByTitle }
+                LIMIT ${req.params.page * req.params.perPage}, ${req.params.perPage};`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/articles/:articleId/series', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT series.series_id, title
+                FROM series_in_articles
+                INNER JOIN series ON series_in_articles.series_id = series.series_id
+                WHERE article_id = ${req.params.articleId}
+                ORDER BY title ASC;`;
+
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({errors: [{msg: INTERNAL_ERROR_MSG}]});
+                }
+                else {
+                    res.status(statusCodes.OK).json({rows: rows});
+                }
+            });
+
+        }
+    });
+});
+
+app.get('/articles/:articleId', function(req, res) {
+    const userCookieJwt = req.cookies.user_auth;
+    jwt.verify(userCookieJwt, config.KEY, function(err, decoded) {
+        if (err) {
+            res.status(statusCodes.UNAUTHORIZED).json(
+                {errors: [{msg: FORBIDDEN_ADMIN_MSG}]});
+        }
+        else {
+
+            const sql = `SELECT article_id, title, content, publication_date
+                FROM articles
+                WHERE article_id = ${req.params.articleId};`;
 
             db.query(sql, (err, rows) => {
                 if (err) {
@@ -1464,23 +1611,39 @@ app.get('/covers/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/${req.params.id}/${req.params.id}.jpg`, (err) => {
         if (err) {
             res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/covers/no_image.png`);
-        }        
+        }
     });
 });
 
-app.get('/episodes/small/:id.jpg', function(req, res) {
+app.get('/news/small/:id.jpg', function(req, res) {
+    res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/articles/${req.params.id}/${req.params.id}_small.jpg`, (err) => {
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/articles/no_image_small.png`);
+        }
+    });
+});
+
+app.get('/news/:id.jpg', function(req, res) {
+    res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/articles/${req.params.id}/${req.params.id}.jpg`, (err) => {
+        if (err) {
+            res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/articles/no_image.png`);
+        }
+    });
+});
+
+app.get('/screenshots/small/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/episodes/${req.params.id}/${req.params.id}_small.jpg`, (err) => {
         if (err) {
             res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/episodes/no_video_small.jpg`);
-        }        
+        }
     });
 });
 
-app.get('/episodes/:id.jpg', function(req, res) {
+app.get('/screenshots/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/episodes/${req.params.id}/${req.params.id}.jpg`, (err) => {
         if (err) {
             res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/episodes/no_video.jpg`);
-        }        
+        }
     });
 });
 
@@ -1496,13 +1659,20 @@ app.get('/:cast/:id.jpg', function(req, res) {
     res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/${req.params.cast}/${req.params.id}/${req.params.id}.jpg`, (err) => {
         if (err) {
             res.status(statusCodes.OK).sendFile(`${__dirname}/public/img/${req.params.cast}/no_image.png`);
-        }        
+        }
     });
 });
 
-app.get('/videos/:id.mp4', function(req, res) {
+app.get('/videos/:type/:id.mp4', function(req, res) {
 
-    const path = `${__dirname}/public/videos/${req.params.id}.mp4`;
+    let path = "";
+    if (req.params.type.toLowerCase() === "episodes") {
+        path = `${__dirname}/public/episodes/${req.params.id}.mp4`;
+    }
+    else {
+        path = `${__dirname}/public/trailers/${req.params.id}.mp4`;
+    }
+
     const stat = fs.statSync(path);
     const fileSize = stat.size;
     const range = req.headers.range;
@@ -1635,12 +1805,12 @@ io.on('connection', (socket) => {
             }
             else {
 
-                const datetime = moment().format(); 
+                const datetime = moment().format();
 
                 const newValues = `user_id = ${decoded.id}, ${about.slice(0, -1)}_id = ${
                     id}, content = "${content}", datetime = "${datetime}"`;
 
-                insertRow(`comments_about_${about.toLowerCase()}`, newValues, 
+                insertRow(`comments_about_${about.toLowerCase()}`, newValues,
                     function (err, statusCode, msg) {
                     if (err) {
                         socket.emit('add comment', {statusCode: statusCode,
@@ -1650,8 +1820,8 @@ io.on('connection', (socket) => {
                         socket.emit('add comment', {statusCode: statusCode,
                             errors: [{ msg: msg }]});
                         io.sockets.emit('get new comment', {statusCode:
-                            statusCodes.OK, rows: [{user_id: decoded.id, 
-                            nickname: decoded.nickname, content: content, 
+                            statusCodes.OK, rows: [{user_id: decoded.id,
+                            nickname: decoded.nickname, content: content,
                             datetime: datetime}], token: token, errors: []});
                     }
                 });
@@ -1668,7 +1838,7 @@ io.on('connection', (socket) => {
             }
             else {
 
-                const datetime = moment().format(); 
+                const datetime = moment().format();
 
                 const newValues = `user_id = ${decoded.id}, series_id = ${
                     seriesId}, content = "${content}", datetime = "${datetime}"`;
@@ -1682,8 +1852,8 @@ io.on('connection', (socket) => {
                         socket.emit('add review', {statusCode: statusCode,
                             errors: [{ msg: msg }]});
                         io.sockets.emit('get new review', {statusCode:
-                            statusCodes.OK, rows: [{user_id: decoded.id, 
-                            nickname: decoded.nickname, content: content, 
+                            statusCodes.OK, rows: [{user_id: decoded.id,
+                            nickname: decoded.nickname, content: content,
                             datetime: datetime}], token: token, errors: []});
                     }
                 });

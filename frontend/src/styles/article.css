@@ -1,0 +1,35 @@
+.article-title {
+	font-size: 1.3rem;
+}
+
+.article-datetime {
+	font-size: 0.6rem;
+	color: #5E676E;
+}
+
+.border-b {
+	border-bottom: 0.08rem solid #ECF0F1;
+}
+
+.all-articles {
+	background: url(../img/bg.jpg) top center;
+	background-size: cover;
+	background-color: rgba(0, 0, 0, 0.7);
+	background-attachment: fixed;
+	background-position-y: 0;
+	min-height: 100%;
+}
+
+.all-articles-container {
+	width: 63%;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.article-block {
+	width: 87%;
+}
+
+.trailer {
+	border: 1rem solid #000000;
+	border-radius: 1rem;
+}

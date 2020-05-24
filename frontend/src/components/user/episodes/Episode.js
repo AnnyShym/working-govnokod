@@ -110,12 +110,12 @@ class Episode extends Component {
                 errors: []
             });
 
-            this.getEpisode(parseInt(this.state.currentEpisode) + 1);  
+            this.getEpisode(parseInt(this.state.currentEpisode) + 1);
 
         }
     }
 
-    onClickPrevious = () => {    
+    onClickPrevious = () => {
         if (this.props.match.params.episodeNumber > 1) {
 
             redirect = <Redirect to={ `/series/${this.props.match.params.seriesId}/seasons/${
@@ -128,7 +128,7 @@ class Episode extends Component {
                 errors: []
             });
 
-            this.getEpisode(parseInt(this.state.currentEpisode) - 1);  
+            this.getEpisode(parseInt(this.state.currentEpisode) - 1);
 
         }
     }
@@ -173,7 +173,7 @@ class Episode extends Component {
         if (this.state.episode.description) {
             description = this.state.episode.description.split('\n');
         }
-        
+
         return(
 
             <div>
@@ -201,15 +201,15 @@ class Episode extends Component {
                                 <img src={ require('../../../img/episode_next.png') } alt="Next" height="50px" width="50px" />
                             </div>
                         </div>
-                        <div className="d-flex justify-content-center">                        
-                            { description ?  
-                                <div className="w-75 p-5 mb-3 shadow description">  
-                                {             
+                        <div className="d-flex justify-content-center">
+                            { description ?
+                                <div className="w-75 p-5 mb-3 shadow description">
+                                {
                                     description.map((str, index) =>
-                                        (index === description.length) ?
-                                            <p key={ index }>{ str }</p>
-                                        :
+                                        ((index + 1) === description.length) ?
                                             <p key={ index } className="mb-0">{ str }</p>
+                                        :
+                                            <p key={ index }>{ str }</p>
                                     )
                                 }
                                 </div>
