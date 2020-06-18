@@ -159,7 +159,7 @@ class AwardsPage extends Component {
                     <div className="w-75">
                         <div>
                             { 
-                                learnedAwards.map((value, id) => {
+                                totalAwards.map((value, id) => {
                                     return <img src={ value ? require(`../../../img/${id}.png`) : require("../../../img/no_award.png") } width="13%" alt="Award" 
                                         className={ value ? "mr-5" : "transparent mr-5" } />
                                 })

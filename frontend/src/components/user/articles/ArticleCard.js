@@ -100,7 +100,7 @@ class ArticleCard extends Component {
                     <div className="py-4 border-b">
                         <div>
                             <Link to={ `/articles/${this.props.article.article_id}` } rel="noopener" className="float-left mb-4 mr-4">
-                                <img src={ address } alt={ this.props.article.title } className="cover" />
+                                <img src={ address } alt={ this.props.article.title } className="cover" width="210px" height="300px" />
                             </Link>
                         </div>
                         <div>

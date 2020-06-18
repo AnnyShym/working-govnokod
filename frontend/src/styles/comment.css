@@ -47,4 +47,15 @@ textarea:focus {
 .emoji-panel {
 	position: relative;
 	z-index: 1;
+	top: -350px;
+}
+
+.self-align {
+	position: relative;
+	top: -319.9px;
+
+}
+
+.comment-form {
+	height: 100px;
 }

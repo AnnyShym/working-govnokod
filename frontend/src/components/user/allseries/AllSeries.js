@@ -11,7 +11,7 @@ import statusCodes from '../../../modules/status_codes';
 
 import '../../../styles/series_info.css';
 
-const SERIES_PER_PAGE = 5;
+const SERIES_PER_PAGE = 2;
 
 class AllSeries extends Component {
 
