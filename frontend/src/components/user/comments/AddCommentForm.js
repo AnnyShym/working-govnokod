@@ -110,7 +110,7 @@ class AddCommentForm extends Component {
                     </div>
                 </div>
                 <div className="d-flex justify-content-center">
-                    <form className="w-50 mt-4 mb-3 d-flex flex-column comment-form" method="post" onSubmit={ this.onSubmit }>
+                    <form className="w-50 mt-4 mb-3 d-flex flex-column form comment-form" method="post" onSubmit={ this.onSubmit }>
                         <div className="d-flex flex-column justify-content-center">
                             <div>
                             { this.state.expanded ?
@@ -143,7 +143,7 @@ class AddCommentForm extends Component {
                                         <img src={ require("../../../img/emoji.png") } alt="Emoji" width="30px" height="30px" />
                                     </div> 
                                 </div>         
-                                <textarea name="content" value={ this.state.content } onChange= { this.onChangeContent } placeholder="Input your thoughts here..." rows="3" className="py-3 px-4 border-0"></textarea>
+                                <textarea name="content" value={ this.state.content } onChange= { this.onChangeContent } placeholder="Input your thoughts here..." rows="3" className="py-3 px-4 border-0 comment-resize"></textarea>
                                 <div className="d-flex flex-column justify-content-center">
                                     <div onClick={ this.onSubmit } className="pointer">
                                         <img src={ require("../../../img/send.png") } alt="Send" width="40px" height="40px" />

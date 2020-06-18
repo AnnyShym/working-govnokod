@@ -6,6 +6,11 @@ class Video extends Component {
 
     componentDidMount() {
 
+        if (this.props.time) {
+            let video = document.getElementById("video");
+            video.currentTime = this.props.time;
+        }
+
         const videoTrack = document.getElementById("video-track");
 
         videoTrack.oncuechange = e => this.props.onCueChange(e, document.getElementById("video"));

@@ -99,7 +99,7 @@ class AddReviewForm extends Component {
                     </div>
                 </div>
                 <div className="d-flex justify-content-center">
-                    <form className="w-50 mt-4 mb-3 d-flex justify-content-between comment-form" method="post" onSubmit={ this.onSubmit }>
+                    <form className="w-50 mt-4 mb-3 d-flex justify-content-between form" method="post" onSubmit={ this.onSubmit }>
                         <div className="d-flex flex-column justify-content-center">
                             <div onClick={ () => this.setState({ content: `${this.state.content}<i></i>` }) } className="pointer mb-2 mx-2">
                                 <img src={ require("../../../img/italic.png") } alt="Make Italic" width="20px" height="20px" />

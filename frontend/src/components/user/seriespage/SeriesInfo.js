@@ -3,6 +3,7 @@ import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
 import socketIOClient from 'socket.io-client';
 import Moment from 'react-moment';
+import Cookies from 'universal-cookie';
 
 import Tags from './Tags';
 import Genres from './Genres';
@@ -31,6 +32,11 @@ class SeriesInfo extends Component {
             isFavourite: false,
             isWatched: false,
             isWished: false,
+            stoppedAt: {
+                seasonNumber: 1,
+                episodeNumber: 1,
+                time: 0
+            },
             allowed: true,
             errors: []
         };
@@ -40,12 +46,21 @@ class SeriesInfo extends Component {
     }
 
     componentDidMount() {
+
         this.getSeries();
         this.getRatedValue();
         this.getRating();
         this.getIsFavourite();
         this.getIsWatched();
         this.getIsWished();
+
+        const cookies = new Cookies();
+        if (cookies.get(this.props.seriesId)) {
+            this.setState({
+                stoppedAt: cookies.get(this.props.seriesId)
+            });
+        }
+
     }
 
     getSeries() {
@@ -506,7 +521,9 @@ class SeriesInfo extends Component {
                                             }
                                         </div>
                                         <div>
-                                            <img src={ require('../../../img/watch.png') } width="35px" height="35px" alt="Continue Watching" className="pointer" />
+                                            <Link to={ `/series/${this.props.seriesId}/seasons/${this.state.stoppedAt.seasonNumber}/episodes/${this.state.stoppedAt.episodeNumber}/time/${this.state.stoppedAt.time}` }>
+                                                <img src={ require('../../../img/watch.png') } width="35px" height="35px" alt="Continue Watching" className="pointer" />
+                                            </Link>
                                         </div>
                                     </div>
                                     <div className="mt-5">

@@ -37,6 +37,7 @@ class App extends Component {
                     <Route exact path='/' component={ AllArticles }/>
                     <Route exact path='/signup' component={ SignUp }/>
                     <Route exact path='/signin' component={ SignIn }/>
+                    <Route exact path='/series/:seriesId/seasons/:seasonNumber/episodes/:episodeNumber/time/:time' component={ Episode }/>
                     <Route exact path='/series/:seriesId/seasons/:seasonNumber/episodes/:episodeNumber' component={ Episode }/>
                     <Route exact path='/series/:criteria/:id' component={ AllSeries }/>
                     <Route exact path='/series/:id' component={ SeriesPage }/>

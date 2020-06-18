@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
-import moment from 'moment'
+import moment from 'moment';
+import Cookies from 'universal-cookie';
 
 import NavigationBar from '../NavigationBar';
 import VideoWithKeyWords from './VideoWithKeyWords';
@@ -133,6 +134,26 @@ class Episode extends Component {
         }
     }
 
+    componentWillUnmount() {
+
+        const video = document.getElementById("video");
+
+        if (video.currentTime !== 0) {
+
+            const obj = {
+                seasonNumber: this.props.match.params.seasonNumber,
+                episodeNumber: this.state.currentEpisode,
+                time: Math.floor(video.currentTime)
+            };
+
+            const cookies = new Cookies();
+
+            cookies.set(this.props.match.params.seriesId, obj, { path: '/', expires: new Date(Date.now() + 2147483647) });
+
+        }
+
+    }
+
     render() {
 
         if (!this.state.allowed) {
@@ -195,7 +216,7 @@ class Episode extends Component {
                                 <img src={ require('../../../img/episode_previous.png') } alt="Previous" height="50px" width="50px" />
                             </div>
                             <div className="video">
-                                <VideoWithKeyWords episode_id={ this.state.episode.episode_id } />
+                                <VideoWithKeyWords episode_id={ this.state.episode.episode_id } time={ this.props.match.params.time } />
                             </div>
                             <div onClick={ this.onClickNext } className="d-flex flex-column justify-content-center pointer">
                                 <img src={ require('../../../img/episode_next.png') } alt="Next" height="50px" width="50px" />

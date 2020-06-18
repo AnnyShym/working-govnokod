@@ -201,7 +201,7 @@ class VideoWithKeyWords extends Component {
         return(
 
             <div>
-                <Video episode_id={ this.props.episode_id } onCueChange={ this.handleCueChange } />
+                <Video episode_id={ this.props.episode_id } onCueChange={ this.handleCueChange } time={ this.props.time } />
                 <div id="key-words">
                 </div>
             </div>

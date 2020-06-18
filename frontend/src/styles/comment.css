@@ -15,7 +15,7 @@
 	cursor: pointer;
 }
 
-.comment-form {
+.form {
   	border-bottom: 0.2rem solid #48CFAD;
 }
 
@@ -53,9 +53,12 @@ textarea:focus {
 .self-align {
 	position: relative;
 	top: -319.9px;
-
 }
 
 .comment-form {
 	height: 100px;
+}
+
+.comment-resize {
+	resize: none;
 }
