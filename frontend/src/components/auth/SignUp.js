@@ -27,7 +27,7 @@ class SignUp extends Component {
             errors: []
         }
 
-        this.PASSWORDS_DO_NOT_MATCH_MSG = 'Invalid confirmed password!';
+        this.PASSWORDS_DO_NOT_MATCH_MSG = 'The entered passwords do not match!';
 
         this.onChangeLogin = this.onChangeLogin.bind(this);
         this.onChangeNickName = this.onChangeNickName.bind(this);
@@ -83,6 +83,7 @@ class SignUp extends Component {
                 signedUp: false,
                 errors: [{ msg: this.PASSWORDS_DO_NOT_MATCH_MSG }]
             });
+            return;
         }
 
         const obj = {

@@ -46,52 +46,24 @@ class SearchSeries extends Component {
 
         if (this.props.criteria !== undefined) {
 
-            // let tags = [];
-            // let genres = [];
-            // let actors = [];
-            // let creators = [];
-            // let producers = [];
+            let tags = [];
+            let genres = [];
 
-            // if (this.props.criteria === "tags") {
-            //     const name = this.props.name.replace(/%20/g, ' ');
-            //     this.getTag();
-            //     tags.push({ label: name, value: this.state.tag[0].tag_id });
-            // }
+            if (this.props.criteria === "tags") {
+                tags.push({ value: this.props.id });
+            }
 
-            // if (this.props.criteria === "genres") {
-            //     const name = this.props.name.replace(/%20/g, ' ');
-            //     this.getGenre();
-            //     genres.push({ label: name, value: this.state.genre[0].genre_id });
-            // }
+            if (this.props.criteria === "genres") {
+                genres.push({ value: this.props.id });
+            }
 
-            // if (this.props.criteria === "actors") {
-            //     const name = this.props.name.replace(/%20/g, ' ');
-            //     this.getActor();
-            //     actors.push({ label: name, value: this.state.actor[0].actor_id });
-            // }
-
-            // if (this.props.criteria === "creators") {
-            //     const name = this.props.name.replace(/%20/g, ' ');
-            //     this.getCreator();
-            //     creators.push({ label: name, value: this.state.creator[0].creator_id });
-            // }
-
-            // if (this.props.criteria === "producers") {
-            //     const name = this.props.name.replace(/%20/g, ' ');
-            //     this.getProducer();
-            //     producers.push({ label: name, value: this.state.producer[0].producer_id });
-            // }
-
-            // this.setState({
-            //     criteria: {
-            //         ...this.state.criteria,
-            //         tags: tags,
-            //         genres: genres,
-            //         actors: actors,
-            //         creators: creators,
-            //         producers: producers
-            //     }
-            // });
+            this.setState({
+                criteria: {
+                    ...this.state.criteria,
+                    tags: tags,
+                    genres: genres,
+                }
+            });
 
         }
 
@@ -228,7 +200,19 @@ class SearchSeries extends Component {
         axios.get(`${serverAddress}tags`,
             {withCredentials: true})
         .then(response => {
+            let tags = this.state.criteria.tags;
+            if (tags.length > 0) {
+                response.data.rows.map((tag) => {
+                    if (tags[0].value = tag.value) {
+                        tags[0] = { label: tag.name, value: tag.tag_id };
+                    }
+                });
+            }
             this.setState({
+                criteria: {
+                    ...this.state.criteria,
+                    tags: tags
+                },
                 tags: response.data.rows,
                 allowed: true,
                 errors: []
@@ -252,10 +236,25 @@ class SearchSeries extends Component {
     }
 
     getGenres = () => {
+        console.log(this.state.criteria.genres);
         axios.get(`${serverAddress}genres`,
             {withCredentials: true})
         .then(response => {
+
+            let genres = this.state.criteria.genres;
+            if (genres.length > 0) {
+                response.data.rows.map((genre) => {
+                    if (genres[0].value = genre.value) {
+                        genres[0] = { label: genre.name, value: genre.genre_id };
+                    }
+                });
+            }
+
             this.setState({
+                criteria: {
+                    ...this.state.criteria,
+                    genres: genres
+                },
                 genres: response.data.rows,
                 allowed: true,
                 errors: []

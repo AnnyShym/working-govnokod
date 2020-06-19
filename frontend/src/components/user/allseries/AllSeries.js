@@ -115,7 +115,7 @@ class AllSeries extends Component {
                 :
                     <div className="all-series">
                         <div className="d-flex flex-column container all-series-container">
-                            <SearchSeries criteria={ this.props.match.params.criteria } name={ this.props.match.params.name } onFormRequest={ this.handeFormRequest } />
+                            <SearchSeries criteria={ this.props.match.params.criteria } id={ this.props.match.params.id } onFormRequest={ this.handeFormRequest } />
                             { (this.state.series === null) ?
                                 <div className="mb-3">
                                     <div className="d-flex justify-content-center">

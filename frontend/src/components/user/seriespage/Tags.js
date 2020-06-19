@@ -73,7 +73,7 @@ class Tags extends Component {
                     this.state.tags.map((tag) => {
                         return(
 
-                            <Link to={ `/series/tag/${tag.tag_id}` } key={ tag.tag_id } className="tag lowercase ml-3 px-3 py-1 d-flex flex-column justify-content-center tag-text">
+                            <Link to={ `/series/tags/${tag.tag_id}` } key={ tag.tag_id } className="tag lowercase ml-3 px-3 py-1 d-flex flex-column justify-content-center tag-text">
                                 • { tag.name }
                             </Link>
 

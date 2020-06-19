@@ -69,7 +69,7 @@ class Genres extends Component {
                     this.state.genres.map((genre) => {
                         return(
 
-                            <Link to={ `/series/genre/${genre.genre_id}` } key={ genre.genre_id } className="lowercase mr-2">
+                            <Link to={ `/series/genres/${genre.genre_id}` } key={ genre.genre_id } className="lowercase mr-2">
                                 { genre.name }
                             </Link>
 
