@@ -1252,7 +1252,7 @@ app.get('/comments/:about/:id', function(req, res) {
         }
         else {
 
-            const sql = `SELECT users.user_id, nickname, datetime, content
+            const sql = `SELECT comment_id, users.user_id, nickname, datetime, content, ${req.params.about.slice(0, -1)}_id AS about_id
                 FROM comments_about_${req.params.about.toLowerCase()}
                 INNER JOIN users ON comments_about_${req.params.about.toLowerCase()}.user_id = users.user_id
                 WHERE ${req.params.about.slice(0, -1)}_id = ${req.params.id}
@@ -1759,11 +1759,11 @@ io.on('connection', (socket) => {
                                 console.log(err);
                             }
                             else {
-                                io.sockets.emit('get rated value', {statusCode:
+                                socket.emit('get rated value', {statusCode:
                                     statusCodes.OK, row: [{rating_value: ratingValue}],
-                                    token: token, errors: []});
+                                    errors: []});
                                 io.sockets.emit('get rating', {statusCode:
-                                    statusCodes.OK, row: row, errors: []});
+                                    statusCodes.OK, row: row, seriesId: seriesId, errors: []});
                             }
                         });
                     }
@@ -1790,7 +1790,7 @@ io.on('connection', (socket) => {
                     }
                     else {
                         socket.emit('get rated value', {statusCode:
-                            statusCodes.OK, row: row, token: token, errors: []});
+                            statusCodes.OK, row: row, errors: []});
                     }
                 });
             }
@@ -1805,10 +1805,10 @@ io.on('connection', (socket) => {
             }
             else {
 
-                const datetime = moment().format();
+                const datetime = moment();
 
                 const newValues = `user_id = ${decoded.id}, ${about.slice(0, -1)}_id = ${
-                    id}, content = "${content}", datetime = "${datetime}"`;
+                    id}, content = "${content}", datetime = "${datetime.format()}"`;
 
                 insertRow(`comments_about_${about.toLowerCase()}`, newValues,
                     function (err, statusCode, msg) {
@@ -1817,15 +1817,46 @@ io.on('connection', (socket) => {
                             errors: [{ msg: msg }]});
                     }
                     else {
-                        socket.emit('add comment', {statusCode: statusCode,
-                            errors: [{ msg: msg }]});
-                        io.sockets.emit('get new comment', {statusCode:
-                            statusCodes.OK, rows: [{user_id: decoded.id,
-                            nickname: decoded.nickname, content: content,
-                            datetime: datetime}], token: token, errors: []});
+                        select('comment_id', `comments_about_${about.toLowerCase()}`, 
+                            `WHERE ${about.slice(0, -1)}_id = ${id} AND user_id = ${decoded.id} AND datetime = "${datetime.format("YYYY-MM-DD HH:mm:ss")}"`, '',
+                            function (err, statusCode, msg, rows) {
+                            if (!err) {
+                                socket.emit('add comment', {statusCode: statusCode,
+                                    errors: [{ msg: msg }]});
+                                io.sockets.emit('get new comment', {statusCode:
+                                    statusCodes.OK, about: about, rows: [{comment_id: rows[0].comment_id, 
+                                    user_id: decoded.id, nickname: decoded.nickname, content: content,
+                                    datetime: datetime, about_id: id}], errors: []});
+                            }
+                        });
                     }
                 });
 
+            }
+        });
+    });
+
+    socket.on('delete comment', (about, id, commentId, token) => {
+        jwt.verify(token, config.KEY, function(err, decoded) {
+            if (err) {
+                socket.emit('delete comment', {statusCode: statusCodes.UNAUTHORIZED,
+                    errors: [{ msg: UNAUTHORIZED_MSG }]});
+            }
+            else {
+                deleteRow(`comments_about_${about.toLowerCase()}`, `comment_id = ${commentId}`, 
+                    function (err, statusCode, msg) {
+                    if (err) {
+                        socket.emit('delete comment', {statusCode: statusCode,
+                            errors: [{ msg: msg }]});
+                    }
+                    else {
+                        socket.emit('delete comment', {statusCode: statusCode,
+                            errors: [{ msg: msg }]});
+                        io.sockets.emit('get deleted comment', {statusCode:
+                            statusCodes.OK, about: about, rows: [{ comment_id: commentId, about_id: id }], 
+                            errors: []});
+                    }
+                });
             }
         });
     });
@@ -1852,12 +1883,37 @@ io.on('connection', (socket) => {
                         socket.emit('add review', {statusCode: statusCode,
                             errors: [{ msg: msg }]});
                         io.sockets.emit('get new review', {statusCode:
-                            statusCodes.OK, rows: [{user_id: decoded.id,
+                            statusCodes.OK, rows: [{user_id: decoded.id, series_id: seriesId,
                             nickname: decoded.nickname, content: content,
-                            datetime: datetime}], token: token, errors: []});
+                            datetime: datetime}], errors: []});
                     }
                 });
 
+            }
+        });
+    });
+
+    socket.on('delete review', (seriesId, token) => {
+        jwt.verify(token, config.KEY, function(err, decoded) {
+            if (err) {
+                socket.emit('delete review', {statusCode: statusCodes.UNAUTHORIZED,
+                    errors: [{ msg: UNAUTHORIZED_MSG }]});
+            }
+            else {
+                deleteRow(`reviews`, `user_id = ${decoded.id} AND series_id = ${seriesId}`, 
+                    function (err, statusCode, msg) {
+                    if (err) {
+                        socket.emit('delete review', {statusCode: statusCode,
+                            errors: [{ msg: msg }]});
+                    }
+                    else {
+                        socket.emit('delete review', {statusCode: statusCode,
+                            errors: [{ msg: msg }]});
+                        io.sockets.emit('get deleted review', {statusCode:
+                            statusCodes.OK, rows: [{user_id: decoded.id,
+                            series_id: seriesId}], errors: []});
+                    }
+                });
             }
         });
     });

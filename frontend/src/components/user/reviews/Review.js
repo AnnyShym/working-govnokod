@@ -28,7 +28,7 @@ class Review extends Component {
                         </div>
                     </div>
                     { (this.props.userId === this.props.review.user_id) ?
-                        <div className="d-flex flex-column justify-content-center pointer mr-2">
+                        <div onClick={ this.props.onDeleteReview } className="d-flex flex-column justify-content-center pointer mr-2">
                             <img src={ require("../../../img/delete.png") } alt="Delete" width="15px" height="15px" />
                         </div>
                     :

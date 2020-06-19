@@ -25,7 +25,7 @@ class Comment extends Component {
                         </div>
                     </div>
                     { (this.props.userId === this.props.comment.user_id) ?
-                        <div className="d-flex flex-column justify-content-center pointer mr-2">
+                        <div onClick={ () => this.props.onDeleteComment(this.props.comment.comment_id) } className="d-flex flex-column justify-content-center pointer mr-2">
                             <img src={ require("../../../img/delete.png") } alt="Delete" width="15px" height="15px" /> 
                         </div>
                     :

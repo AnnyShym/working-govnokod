@@ -13,7 +13,7 @@ class Video extends Component {
 
         const videoTrack = document.getElementById("video-track");
 
-        videoTrack.oncuechange = e => this.props.onCueChange(e, document.getElementById("video"));
+        videoTrack.oncuechange = (e) => this.props.onCueChange(e);
 
     }
 

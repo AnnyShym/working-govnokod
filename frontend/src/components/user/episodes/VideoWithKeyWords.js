@@ -15,7 +15,6 @@ import '../../../styles/key_word.css';
 
 const language = "en-ru";
 const customSwal = withReactContent(Swal);
-let video = null;
 
 class VideoWithKeyWords extends Component { 
 
@@ -32,11 +31,7 @@ class VideoWithKeyWords extends Component {
 
     } 
 
-    handleCueChange = (e, videoElement) => {
-
-        if (!video) {
-            video = videoElement;
-        }
+    handleCueChange = (e) => {
 
         let words = null;
         if ([...e.target.track.activeCues].map(t => t.text)
@@ -92,6 +87,7 @@ class VideoWithKeyWords extends Component {
 
     onClickWord = (e) => {
 
+        let video = document.getElementById("video");
         video.pause();
         
         const word = e.target.innerHTML;
@@ -99,7 +95,7 @@ class VideoWithKeyWords extends Component {
         axios.get(`https://translate.yandex.net/api/v1.5/tr.json/translate?key=${yandexKey}&lang=${language}&text=${word}`)
         .then((response) => {
 
-            const translation = response.data.text[0];
+            const translation = response.data.text[0].toLowerCase();
 
             let divLeft = document.getElementById(word);
             let div = document.createElement('div');

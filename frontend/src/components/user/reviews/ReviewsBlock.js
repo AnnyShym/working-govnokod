@@ -31,6 +31,7 @@ class ReviewsBlock extends Component {
     componentDidMount() {
         this.getReviews();
         this.getNewReview();
+        this.getDeletedReview();
     }
 
     getReviews() {
@@ -65,9 +66,11 @@ class ReviewsBlock extends Component {
     getNewReview() {
         this.socket.on('get new review', (res) => {
             if (res.statusCode === statusCodes.OK) {
-                this.setState({
-                    reviews : [ res.rows[0], ...this.state.reviews ]
-                });
+                if (res.rows[0].series_id === this.props.seriesId) {
+                    this.setState({
+                        reviews : [ res.rows[0], ...this.state.reviews ]
+                    });
+                }
             }
             else {
                 console.log(`${res.statusCode}: ${res.errors}`);
@@ -76,6 +79,62 @@ class ReviewsBlock extends Component {
                 });
             }
         })
+    }
+
+    getDeletedReview() {
+        this.socket.on('get deleted review', (res) => {
+            if (res.statusCode === statusCodes.OK) {
+                if (res.rows[0].series_id === this.props.seriesId) {
+                    let reviews = this.state.reviews;
+                    for (let i = 0; i < reviews.length; i++) {
+                        if (reviews[i].user_id === res.rows[0].user_id) {
+                            reviews.splice(i, 1);
+                            break;
+                        }
+                    }
+                    this.setState({
+                        reviews : reviews
+                    });
+                }
+            }
+            else {
+                console.log(`${res.statusCode}: ${res.errors}`);
+                this.setState({
+                    errors: res.errors
+                });
+            }
+        })
+    }
+
+    handleDeleteReview = () => {
+
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)user_auth\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+
+        this.socket.emit('delete review', this.props.seriesId, token);
+        this.socket.on('delete review', (res) => {
+            if (res.statusCode !== statusCodes.NO_CONTENT) {
+                console.log(`${res.statusCode}: ${res.errors}`);
+                if (res.statusCode === statusCodes.UNAUTHORIZED) {
+                    this.setState({
+                        allowed: false,
+                        errors: res.errors
+                    });
+                }
+                if (res.statusCode === statusCodes.INTERNAL_SERVER_ERROR ||
+                    res.statusCode === statusCodes.BAD_REQUEST) {
+                    this.setState({
+                        errors: res.errors
+                    });
+                }
+            }
+            else {
+                this.setState({
+                    allowed: true,
+                    errors: []
+                });                
+            }
+        });
+
     }
 
     render() {
@@ -104,7 +163,7 @@ class ReviewsBlock extends Component {
                     <div className="d-flex flex-column w-50">
                         { 
                             this.state.reviews.map((review, index) => 
-                                <Review key={ index } review={ review } userId={ this.state.userId } />
+                                <Review key={ index } review={ review } userId={ this.state.userId } onDeleteReview={ this.handleDeleteReview } />
                             )
                         }
                     </div>

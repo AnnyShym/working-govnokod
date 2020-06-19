@@ -138,12 +138,14 @@ class SeriesInfo extends Component {
     getRating() {
         this.socket.on('get rating', (res) => {
             if (res.statusCode === statusCodes.OK) {
-                this.setState({
-                    series : [{
-                        ...this.state.series[0],
-                        rating: res.row[0].rating
-                    }]
-                });
+                if (res.seriesId === this.props.seriesId) {
+                    this.setState({
+                        series : [{
+                            ...this.state.series[0],
+                            rating: res.row[0].rating
+                        }]
+                    });
+                }
             }
             else {
                 console.log(`${res.statusCode}: ${res.errors}`);
