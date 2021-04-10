@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@khanacademy/react-multi-select": "^0.3.3",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "emoji-picker-react": "^3.1.6",
     "moment": "^2.26.0",
     "react": "^16.8.6",
